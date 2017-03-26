@@ -410,3 +410,12 @@ If you're using the `formFor` helper method it's not necessary to use the status
 ## Best Practices
 
 * Flatten all your relationships. Even if a resource is never directly retrieved (i.e. nested associations) you should still create actions/reducers for them and dispatch the relationships to the store.
+
+* Sort/Filter/Manipulate your resource when connecting your components to the redux store. This keeps the components knowledge of the resource to a minimum
+
+  ```javascript
+  connect(state => {
+    const filteredTodos = filter(state.todos, () => /* ... Filter on some criteria */)
+    return { todos: filteredTodos }
+  })(App)
+  ```
