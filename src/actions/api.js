@@ -63,6 +63,8 @@ class Request {
     return this._request
   }
 
+  setFetched = (fetched = true) => this._fetched = fetched
+
   setResponse = (resp) => {
     this._fetched = true
     this._request = new Promise(res => res(resp))
@@ -74,15 +76,15 @@ class Request {
     const m = this.middlewares.shift()
     return new Promise((res, rej) => {
       m
-        ?  applyMiddleware(m, res, rej)
+        ? applyMiddleware(m, res, rej)
         : fetch().then(res).catch(rej)
     })
   }
 
   applyMiddleware = (middleware, resolveAll, rejectAll) => {
-    const { name, applyMiddleware, middlewares, fetch, setResponse, dispatch, action, options } = this
+    const { name, applyMiddleware, middlewares, fetch, setFetched, setResponse, dispatch, action, options } = this
 
-    new Promise((resolve, reject) => middleware(name, { resolve, reject, fetch, options, dispatch, action }))
+    new Promise((resolve, reject) => middleware(name, { resolve, reject, fetch, setFetched, options, dispatch, action }))
       .then((result) => {
         if (result) setResponse(result)
         const next = middlewares.shift()
