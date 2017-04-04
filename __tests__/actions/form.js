@@ -67,6 +67,15 @@ test('form helper can initialize the form', () => {
   expect(store.dispatch(form.init(data))).toEqual(expectedAction)
 })
 
+test('form helper can change fields', () => {
+  const store = mockStore({})
+  const form = store.dispatch(actions.formFor(formKey))
+  const data = { foo: 1 }
+  const expectedAction = { type: change, payload: 1, meta: { form: formKey, field: 'foo' } }
+
+  expect(store.dispatch(form.change(data)[0])).toEqual(expectedAction)
+})
+
 test('form helper can clear fields', () => {
   const store = mockStore({})
   const form = store.dispatch(actions.formFor(formKey))

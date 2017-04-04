@@ -65,6 +65,13 @@ export function formActions(resource){
               : clearForm(dispatch, key)
           },
           /*
+           * Change given fields
+           * Expects keys to be field names and values to be field values
+           */
+          change(fields = {}) {
+            return Object.keys(fields).map(k => changeField(dispatch, fields[k], key, k))
+          },
+          /*
            * Return the current form errors
            */
           errors(action, fieldKey = null) {

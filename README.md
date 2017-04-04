@@ -154,11 +154,13 @@ const LoggingMiddleware = (resourceName, req) => {
 Each middleware is called with the name of the resource it corresponds to as well as a request object. A middleware must either `resolve` the request in order to continue the chain or `reject` the request to halt the chain. A request object contains of the following keys:
 
 ```javascript
-{ resolve, reject, fetch, options, dispatch, action }
+{ resolve, reject, setFetched, fetch, options, dispatch, action }
 ```
 
 * `resolve` - Apply the next middleware
 * `reject` - Fail the require
+* `setFetched` - Sets whether or not this request has been fetched/handled. If true the fetch request will run when the middleware chain is finished, if false it will not run
+* `fetch` - Perform the fetch request. If your middleware needs access to the request, you can manually perform the request
 * `options` - Options associated with the current request,
 * `dispatch` - redux dispatch function for dispatching actions to the store
 * `action` - the action being performed, which will be a string of either `fetch, create, update, destroy`. Note that `fetch` is used both for `show` and `index` actions. Lastly the `fetch` option can be used to perform the request out of order. Normally the middleware will run before the request is performed. You must still resolve the request after fetching. This functionality can be used to implement caching. See `src/middleware.js` for an example.
@@ -288,7 +290,8 @@ export default connect(
 The generated form object has the following method:
 
 * `init(object)` - initialize the form with data. This could either be nothing (i.e. you're creating a resource) or an object from your store (i.e. you're updating a resource)
-* `clear(fieldName)` - If a fieldName is supplied, clears the value from the form. If no field is given, clears all values from the form
+* `clear(fieldName)` - If one or more fieldNames are supplied, clears the fields from the form. If no field is given, clears all fields from the form
+* `change({ field: value... })` - Change one or more fields manually. Expects an object where the keys are fields and the values are the field values
 * `errors(crudType)` - Form errors (where `crudType` is one of 'create', 'fetch', 'update', 'destroy')
 * `state()` - The state of the form
 * `field(fieldName, Options)` - Generates an object for reading and updating a form field
