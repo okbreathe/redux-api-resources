@@ -105,6 +105,13 @@ test('form helper can retrieve state of the form', () => {
   expect(form.state()).toEqual(state)
 })
 
+test('form helper can retrieve a subset of the state of the form', () => {
+  const state = { foo: 1, bar: 2 }
+  const store = mockStore({ usersForm: { [formKey]: state } })
+  const form = store.dispatch(actions.formFor(formKey))
+  expect(form.state('foo')).toEqual({ foo: 1 })
+})
+
 test('form helper can retrieve form errors', () => {
   const errors = { foo: "cannot be blank" }
   const store = mockStore({ users: { status: { create: { pendingUpdate: false, id: null, success: false, payload: errors, busy: false } } } })

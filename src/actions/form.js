@@ -66,6 +66,7 @@ export function formActions(resource){
           },
           /*
            * Change given fields
+           *
            * Expects keys to be field names and values to be field values
            */
           change(fields = {}) {
@@ -88,13 +89,20 @@ export function formActions(resource){
               : errors
           },
           /*
-           * Return the current state of the form
+           * Return the current state of the form.
+           *
+           * Returns all fields by default but can be limited to selected
+           * fields by passing the field names in as arguments
            */
-          state() {
-            return getState()[resource + 'Form'][key] || {}
+          state(...fields) {
+            const state = getState()[resource + 'Form'][key] || {}
+            return fields.length
+              ? fields.reduce((acc, f) => { acc[f] = state[f]; return acc }, {})
+              : state
           },
           /**
            * Generates a field that dispatches change actions
+           *
            * Use the field generator on a component
            * <input {...field("name", { options })} />
            */
