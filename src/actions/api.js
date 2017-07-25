@@ -198,7 +198,7 @@ class Resource {
         dispatch(allActions[`${action}Start`]())
         params = params || { ...data }
         const reqOptions = { method, ...(typeof options == "function" ? options(getState) : options) }
-        return applyMiddleware(name, action, dispatch, { route, data, params, options: reqOptions})
+        return applyMiddleware(name, action, dispatch, { route, data, params, options: reqOptions })
           .then(resp => {
             const type       = `${action}Success`,
                   actionFn   = allActions[type],

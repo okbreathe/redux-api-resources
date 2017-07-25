@@ -2,3 +2,4 @@ node_modules
 project.txt
 coverage
 dist
+!dist/index.d.ts

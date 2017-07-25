@@ -42,6 +42,13 @@ const defaultActionCreators = {
   RESOURCE_DESTROY_FAILURE: 'destroyFailure',
 }
 
+/**
+ * Generates a standard set of resource action types corresponding
+ * to the defaultActionTypes above, where `RESOURCE` is replaced
+ * with the given `resourceName`
+ * @param {String} resourceName  - name of the resource
+ * @return {Object}
+ */
 export function resourceActionTypes(resourceName) {
   if (resourceName == null) throw new Error('Expected resource name')
 
@@ -54,42 +61,45 @@ export function resourceActionTypes(resourceName) {
 }
 
 /**
- * Generates a stanard set of resource related action creators
+ * Generates a standard set of resource action creators corresponding to
+ * the values of the defaultActionCreators above
  * @param {String} resourceName  - name of the resource
+ * @return {Object}
  */
-export function resourceActions(str){
-  if (str == null) throw new Error('Expected resource name')
+export function resourceActions(resourceName){
+  if (resourceName == null) throw new Error('Expected resource name')
 
-  const ret = { clearStatus: clearStatus(str) }
+  const ret = { clearStatus: clearStatus(resourceName) }
 
   for (var key in defaultActionCreators) {
-    ret[defaultActionCreators[key]] = createAction(createKey(str, key))
+    ret[defaultActionCreators[key]] = createAction(createKey(resourceName, key))
   }
 
   return ret
 }
 
 /**
- * Generates a stanard action
+ * Generates a standard action
  * @param {String} resourceName - name of the resource
  * @param {String} action - action being performed -one of fetch, create, update, destroy, or clear
  * @param {String} status - lifecycle status - one of start, success, failure
+ * @return {String}
  */
-export function actionFor(resource, action = 'FETCH', status = "SUCCESS") {
+export function actionFor(resourceName, action = 'FETCH', status = "SUCCESS") {
   if (['START', 'SUCCESS', 'FAILURE', 'CLEAR'].indexOf(status.toUpperCase()) == -1) throw `Invalid status type '${status}'`
   if (['FETCH', 'CREATE', 'UPDATE', 'DESTROY'].indexOf(action.toUpperCase()) == -1) throw `Invalid action '${action}'`
-  return `${resource}/${action}/${status}`.toUpperCase()
+  return `${resourceName}/${action}/${status}`.toUpperCase()
 }
 
 /**
  * Clears the status on a given resource for a given action, or all actions if
  * an action is omitted
  */
-function clearStatus(resource){
-  return (action) => {
+function clearStatus(resourceName){
+  return (actionName) => {
     return (dispatch) => {
-      (action ? [action] : ['fetch', 'create', 'update', 'destroy'])
-        .forEach(a => dispatch({type: actionFor(resource, a, 'clear')}))
+      (actionName ? [actionName] : ['fetch', 'create', 'update', 'destroy'])
+        .forEach(a => dispatch({type: actionFor(resourceName, a, 'clear')}))
     }
   }
 }

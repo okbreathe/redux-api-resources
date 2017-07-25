@@ -1,5 +1,5 @@
-export function formReducer(str, options){
-  if (str == null) throw new Error('[formReducer]: Expected resource name')
+export function formReducer(resourceName, options = {}){
+  if (resourceName == null) throw new Error('[formReducer]: Expected resource name')
 
   options = Object.assign({
     // The form reducer gets a resource and should return a form representation
@@ -13,7 +13,7 @@ export function formReducer(str, options){
     changeReducer: (form, field, value) => ( { ...form, [field]: value } )
   }, options)
 
-  let type = str.toUpperCase()
+  let type = resourceName.toUpperCase()
 
   return function(state = {}, action){
     // Breaking up an action type like USERS/FORM/SUCCESS

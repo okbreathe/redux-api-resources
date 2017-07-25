@@ -10,10 +10,10 @@
  * @param {Function} options.errorReducer - Preprocess errors
  * @return {Function} A reducer
 */
-export function resourceReducer(str, options = {}){
-  if (!str) throw new Error('[resourceReducer]: Expected resource name')
+export function resourceReducer(resourceName, options = {}){
+  if (!resourceName) throw new Error('[resourceReducer]: Expected resource name')
 
-  let type = str.toUpperCase()
+  let type = resourceName.toUpperCase()
 
   options = {
     idAttribute: "id",
@@ -24,9 +24,7 @@ export function resourceReducer(str, options = {}){
     ...options,
   }
 
-  const initialState = initialResourceState()
-
-  return function(state = initialState, action){
+  return function(state = initialResourceState(), action){
     // We're breaking up a string like USERS/FETCH/SUCCESS
     const [resource_type, crud_type, action_status] = action.type.split("/")
 
