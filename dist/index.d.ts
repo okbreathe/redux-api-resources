@@ -155,9 +155,9 @@ export function apiReducer(fn: Function, config?: any): Function
 export function del(route: string, config?: any): Promise<{}>
 export function destroy(route: string, config: any): any
 export function each(resource: ReduxResource, fn: Function): any
-export function filter(resource: ReduxResource, fn: Function): any[]
+export function filter(resource: ReduxResource, predicate: Function): any[]
 export function find(resource: ReduxResource, id: any): any
-export function first(resource: ReduxResource): any
+export function first(resource: ReduxResource, predicate?: Function): any
 export function formActionTypes(resource: string): {
   init: string,
   change: string,
@@ -175,7 +175,7 @@ export function formReducer(resourceName: string, options?: any): any
 export function get(route: string, config?: any): Promise<{}>
 export function initialResourceState(): ReduxResource
 export function jsonAPI(name: string, req: Request): void
-export function last(resource: ReduxResource): any
+export function last(resource: ReduxResource, predicate?: Function): any
 export function map(resource: ReduxResource, fn?: Function): any[]
 export function not(resource: ReduxResource, id: any): any[]
 export function parseRoute(route: string, params: any): string
