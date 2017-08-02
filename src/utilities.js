@@ -1,37 +1,46 @@
-// iterating over entities in order
+// iterate over entities in order
 export function each(resource, fn){
   return resource.results.forEach(id => fn(resource.entities[id]))
 }
 
-// Returns a new collection
+// Map entities
 export function map(resource, fn = i => i){
   return resource.results.map((id,idx) => fn(resource.entities[id], idx))
 }
 
+// Converts entities into a plain array
 export function toArray(resource) {
   return map(resource)
 }
 
 // Filters a collection
-export function filter(resource, fn){
+export function filter(resource, fn) {
   let ret = []
   each(resource, (e) => { if (fn(e)) ret.push(e) })
   return ret
 }
 
-// Returns a new value
+// Reduce entities into a new value
 export function reduce(resource, fn, init){
   return resource.results.reduce((acc, id, idx, arr) => fn(acc, resource.entities[id], idx, arr), init)
 }
 
-// Retrieves the first entity
-export function first(resource){
-  return resource.entities[resource.results[0]]
+// If given a predicate, returns the first entity that it returns true for, otherwise returns the first entity
+export function first(resource, pred = i => i){
+  return resource.entities[resource.results.find(id => pred(resource.entities[id]))]
 }
 
-// Retrieves the last entity
-export function last(resource){
-  return resource.entities[resource.results[resource.results.length - 1]]
+// If given a predicate, returns the last entity that it returns true for, otherwise returns the last entity
+export function last(resource, pred = i => i){
+  let ret
+  let i = resource.results.length
+
+  while(i--) {
+    ret = resource.entities[resource.results[i]]
+    if (pred(ret)) break
+  }
+
+  return ret
 }
 
 // Retrieves one or more entities
@@ -39,7 +48,10 @@ export function last(resource){
 export function find(resource, id){
   const ids = Array.isArray(id) ? id : [id]
   let ret = []
-  ids.forEach(id => ret.push(resource.entities[id]))
+  ids.forEach(id => {
+    const e = resource.entities[id]
+    if (e) ret.push(e)
+  })
   return ret.length == 1 ? ret[0] : ret
 }
 
@@ -60,6 +72,7 @@ export function relationships(resource, relationship) {
   }, [])
 }
 
+// Sort entities
 export function sort(resource, fn){
   return map(resource, r => r).sort(fn)
 }
