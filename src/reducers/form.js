@@ -49,5 +49,5 @@ export function formReducer(resourceName, options = {}){
 }
 
 function formExists(state, form) {
-  if (!state[form]) console.error(`Form '${form}' is not set. Did you mean one of '${Object.keys(state).join(', ')}' `)
+  if (!state[form]) console.error(`Form '${form}' is not set. Did you initialize the form? Existing form keys '${Object.keys(state).join(', ')}' `)
 }

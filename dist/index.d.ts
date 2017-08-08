@@ -27,7 +27,22 @@ export type Empty = boolean | null
 
 export type Entities = {[key: string]: any}
 
-export type ResourceActionTypes = {
+export interface FormActionTypes {
+  init: string
+  change: string
+  clearField: string
+  clearForm: string
+}
+
+export interface FormActions {
+  initializeForm(payload?: any, form?: string): Function
+  changeField(payload: any, meta: any): Function
+  clearField(field: any, form?: string): Function
+  clearForm(form?: string): Function
+  formFor(key?: string): Function
+}
+
+export interface ResourceActionTypes {
   createFailure: string
   createStart: string
   createSuccess: string
@@ -43,7 +58,7 @@ export type ResourceActionTypes = {
   [key: string]: string
 }
 
-export type ResourceActions = {
+export interface ResourceActions {
   clearStatus: (actionName?: string) => Function
   fetchStart: (payload: any, meta?: any) => Action
   fetchSuccess: (payload: any, meta?: any) => Action
@@ -59,6 +74,10 @@ export type ResourceActions = {
   destroyFailure: (payload: any, meta?: any) => Action
   [key: string]: any
 }
+
+export interface ResourceFormActions extends ResourceActions, FormActions {}
+
+export interface ResourceFormActionTypes extends ResourceActionTypes, FormActionTypes {}
 
 export interface Status {
    pendingUpdate: Empty
@@ -158,20 +177,9 @@ export function each(resource: ReduxResource, fn: Function): any
 export function filter(resource: ReduxResource, predicate: Function): any[]
 export function find(resource: ReduxResource, id: any): any
 export function first(resource: ReduxResource, predicate?: Function): any
-export function formActionTypes(resource: string): {
-  init: string,
-  change: string,
-  clearField: string,
-  clearForm: string
-}
-export function formActions(resource: string): {
-  initializeForm(payload?: any, form?: string): Function,
-  changeField(payload: any, meta: any): Function,
-  clearField(field: any, form?: string): Function,
-  clearForm(form?: string): Function,
-  formFor(key?: string): Function
-}
-export function formReducer(resourceName: string, options?: any): any
+export function formActionTypes(resource: string): FormActionTypes
+export function formActions(resource: string): FormActions
+export function formReducer(resourceName: string, options?: any): Reducer<any>
 export function get(route: string, config?: any): Promise<{}>
 export function initialResourceState(): ReduxResource
 export function jsonAPI(name: string, req: Request): void
@@ -187,7 +195,7 @@ export function relationships(resource: ReduxResource, relationship: any): any
 export function request(config: any): any
 export function resourceActionTypes(resourceName: string): ResourceActionTypes
 export function resourceActions(resourceName: string): ResourceActions
-export function resourceFor(resourceName: string, options?: any): { types: ResourceActionTypes, actions: ResourceActions, reducer: Reducer<any> }
+export function resourceFor(resourceName: string, options?: any): { types: ResourceFormActionTypes, actions: ResourceFormActions, reducer: Reducer<any>, formReducer?: Reducer<any> }
 export function resourceReducer(resourceName: string, options?: any): Reducer<any>
 export function sort(resource: ReduxResource, fn: Function): any[]
 export function toArray(resource: ReduxResource): any[]

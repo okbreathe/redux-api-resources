@@ -1,5 +1,5 @@
-import { resourceActionTypes, resourceActions } from './actions'
-import { resourceReducer } from './reducers'
+import { resourceActionTypes, resourceActions, formActionTypes, formActions } from './actions'
+import { resourceReducer, formReducer } from './reducers'
 
 export * from './actions'
 export * from './headers'
@@ -9,7 +9,8 @@ export * from './requests'
 export * from './utilities'
 
 export const resourceFor = (resourceName, reducerOptions = {}) => ({
-  types: resourceActionTypes(resourceName),
-  actions: resourceActions (resourceName),
+  types: { ...formActionTypes(resourceName), ...resourceActionTypes(resourceName) },
+  actions: { ...formActions(resourceName), ...resourceActions(resourceName) },
   reducer: resourceReducer(resourceName, reducerOptions),
+  formReducer: formReducer(resourceName, reducerOptions),
 })

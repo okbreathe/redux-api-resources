@@ -276,6 +276,7 @@ resourceActions.user.formFor(formKey = 'default')
 ```
 
 When binding your action creators, you can use the `formFor` helper to generate any number of forms. In the following example we generate a form for the users resource. If no key is supplied the form will use the default key of `default`.
+**Note that the `formFor` helper requires using [`redux-thunk`](https://github.com/gaearon/redux-thunk) with your store**.
 
 ```javascript
 export default connect(
@@ -355,7 +356,7 @@ The fieldData object contains useful information about the field such as the nam
 
 ## Reducers
 
-The analagous reducer is defined similar to the action creators
+The analogous reducer is defined similar to the action creators
 
 ```javascript
 const resourceReducers = apiReducer(resource => {
@@ -376,7 +377,7 @@ The `formReducer`, `entityReducer` and `errorReducer` are for transforming API r
 
 ## Erata
 
-While it isn't necessary to know this for working with redux-api-resources, resources are stored in the store in the following way:
+While it isn't necessary to know this for working with `redux-api-resources`, resources are stored in the store in the following way:
 
 ```javascript
 users: {
