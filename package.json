@@ -1,6 +1,6 @@
 {
   "name": "redux-api-resources",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "description": "Opinioned library for working with remote API resources and redux",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
