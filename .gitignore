@@ -3,3 +3,4 @@ project.txt
 coverage
 dist
 !dist/index.d.ts
+project.md

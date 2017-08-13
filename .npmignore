@@ -1,2 +1,6 @@
 src
+example
+__test__
+project.md
 project.txt
+tsconfig.json

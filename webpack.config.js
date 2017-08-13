@@ -1,27 +1,23 @@
-const webpack = require('webpack')
+const path = require('path')
+const dtsPlugin = require('dts-webpack-plugin');
 
-const config = {
-  entry: './src/index',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: [ 'babel-loader' ],
-        exclude: /node_modules/
-      }
-    ]
-  },
+module.exports = {
+  entry: "./src/index.ts",
   output: {
-    library: 'ReduxResources',
-    libraryTarget: 'umd'
+    path: path.resolve('./dist'),
+    filename: 'index.js'
+  },
+  plugins: [
+    new dtsPlugin({
+      name: 'redux-api-resources'
+    })
+  ],
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json", ".jsx"],
+  },
+  module: {
+    loaders: [
+      { test: /\.tsx?$/, loader: "ts-loader" }
+    ]
   }
 }
-
-if (process.env.NODE_ENV === 'production') {
-  config.plugins = [
-    new webpack.optimize.UglifyJsPlugin({ sourceMap: true }),
-    new webpack.LoaderOptionsPlugin({ minimize: true })
-  ]
-}
-
-module.exports = config
