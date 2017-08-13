@@ -1,27 +1,14 @@
-const webpack = require('webpack')
-
-const config = {
-  entry: './src/index',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: [ 'babel-loader' ],
-        exclude: /node_modules/
-      }
-    ]
-  },
+module.exports = {
+  entry: "./src/index.tsx",
   output: {
-    library: 'ReduxResources',
-    libraryTarget: 'umd'
+    filename: "bundle.js"
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json", ".jsx"],
+  },
+  module: {
+    loaders: [
+      { test: /\.tsx?$/, loader: "ts-loader" }
+    ]
   }
 }
-
-if (process.env.NODE_ENV === 'production') {
-  config.plugins = [
-    new webpack.optimize.UglifyJsPlugin({ sourceMap: true }),
-    new webpack.LoaderOptionsPlugin({ minimize: true })
-  ]
-}
-
-module.exports = config
