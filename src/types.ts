@@ -1,26 +1,33 @@
 export type Entity = any
 
+export type Id = string | number
+
 export type Empty = boolean | null
 
+export interface Action<T>{
+  type: string
+  payload: T
+  error?: boolean
+  meta?: any
+}
+
 export interface Status {
-   pendingUpdate: Empty
-   id?: string
+   pending: Empty
    success: Empty
-   payload: Empty
-   busy: false
+   payload: any
+   busy: boolean
 }
 
-export interface Meta {
-}
-
-export interface Resource {
-  results: any[]
-  entities: {[key: string]: any}
-  meta: Meta
-  status : {
+export interface Resource<T> {
+  results: Id[]
+  entities: {[key: string]: T}
+  meta: {[key: string]: any}
+  changeset: {[key: string]: any}
+  status: {
     fetch: Status
     create: Status
     update: Status
     destroy: Status
+    [propName: string]: Status
   }
 }
