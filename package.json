@@ -1,7 +1,7 @@
 {
   "name": "redux-api-resources",
   "version": "2.0.0",
-  "description": "Opinioned library for working with API resources and redux",
+  "description": "Opinioned library for working with collections of resources through redux",
   "main": "dist/index.js",
   "directories": {
     "dist": "dist",
@@ -9,7 +9,13 @@
     "examples": "examples",
     "src": "src"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "npm run build:dist && npm run build:es && npm run build:umd && npm run build:umd:min",
+    "build:dist": "babel src --out-dir dist",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watchAll --notify"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/okbreathe/redux-api-resources.git"
@@ -30,5 +36,21 @@
     "ts-loader": "^2.3.2",
     "typescript": "^2.4.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/jest": "^20.0.7",
+    "jest": "^20.0.4",
+    "ts-jest": "^20.0.10"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  }
 }
