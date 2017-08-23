@@ -11,6 +11,11 @@ export interface Action<T>{
   meta?: any
 }
 
+export interface FormMeta {
+  form: string
+  field: string
+}
+
 export interface Status {
    pending: Empty
    success: Empty
