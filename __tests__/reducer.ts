@@ -8,13 +8,14 @@ interface User {
   name: string
 }
 
-const users: User[] = require('./fixtures/users.json')
-const actionFetch   = "USERS/FETCH/SUCCESS"
-const actionCreate  = "USERS/CREATE/SUCCESS"
-const actionUpdate  = "USERS/UPDATE/SUCCESS"
-const actionDestroy = "USERS/DESTROY/SUCCESS"
-
-const changesetSet = "USERS/CHANGESET/SET"
+const users: User[]   = require('./fixtures/users.json')
+const actionFetch     = "USERS/FETCH/SUCCESS"
+const actionFetchFail = "USERS/FETCH/FAILURE"
+const actionClear     = "USERS/FETCH/CLEAR"
+const actionCreate    = "USERS/CREATE/SUCCESS"
+const actionUpdate    = "USERS/UPDATE/SUCCESS"
+const actionDestroy   = "USERS/DESTROY/SUCCESS"
+const changesetSet    = "USERS/CHANGESET/SET"
 const changesetRemove = "USERS/CHANGESET/REMOVE"
 
 const reducer = resourceReducer("users")
@@ -26,7 +27,7 @@ test('adds multiple items to store', () => {
 
   expect(state.entities).toEqual(users.reduce((acc: any, u) => { acc[u.id] = u; return acc }, {}))
   expect(state.results).toEqual(users.map((u: any) => u.id))
-  // expect(state.status.fetch.payload).toEqual(users)
+  expect(state.status.fetch.payload).toEqual(users)
   expect(state.status.fetch.pending).toEqual(false)
   expect(state.status.fetch.success).toEqual(true)
 })
@@ -37,7 +38,7 @@ test('adds a single item to store', () => {
 
   expect(state.entities).toEqual({ [user.id]: user })
   expect(state.results).toEqual([user.id])
-  // expect(state.status.fetch.payload).toEqual(user)
+  expect(state.status.fetch.payload).toEqual(user)
   expect(state.status.fetch.pending).toEqual(false)
   expect(state.status.fetch.success).toEqual(true)
 })
@@ -50,7 +51,7 @@ test('does not add an existing item to store', () => {
 
   expect(state.entities).toEqual({ [user.id]: user })
   expect(state.results).toEqual([user.id])
-  // expect(state.status.fetch.payload).toEqual(user)
+  expect(state.status.fetch.payload).toEqual(user)
   expect(state.status.fetch.pending).toEqual(false)
   expect(state.status.fetch.success).toEqual(true)
 })
@@ -64,7 +65,7 @@ test('adds new items to store', () => {
 
   expect(state.entities).toEqual(testUsers.reduce((acc: any, u) => { acc[u.id] = u; return acc }, {}))
   expect(state.results).toEqual(testUsers.map((u: any) => u.id))
-  // expect(state.status.create.payload).toEqual(payload)
+  expect(state.status.create.payload).toEqual(payload)
   expect(state.status.create.pending).toEqual(false)
   expect(state.status.create.success).toEqual(true)
 })
@@ -77,7 +78,7 @@ test('updates an existing item in the store', () => {
 
   expect(state.entities[user.id]).toEqual({ ...user, ...payload })
   expect(state.results[0]).toEqual(user.id)
-  // expect(state.status.update.payload).toEqual(payload)
+  expect(state.status.update.payload).toEqual(payload)
   expect(state.status.update.pending).toEqual(false)
   expect(state.status.update.success).toEqual(true)
 })
@@ -89,7 +90,7 @@ test('remove an item from the store', () => {
 
   expect(state.entities["1"]).toBeUndefined()
   expect(state.results).not.toContain("1")
-  // expect(state.status.destroy.payload).toEqual(payload)
+  expect(state.status.destroy.payload).toEqual(payload)
   expect(state.status.destroy.pending).toEqual(false)
   expect(state.status.destroy.success).toEqual(true)
 })
@@ -124,4 +125,17 @@ test('Removing a changeset field', () => {
   let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetSet })
   state = reducer(state, { payload: {}, type: changesetRemove, meta: { field: 'foo' } })
   expect(state.changeset).toEqual({ default: { baz: 'quux' } })
+})
+
+test("Clearing the status", () => {
+  const error = { error: "Error message" }
+  let state = reducer(initialResourceState<User>(), { payload: error, type: actionFetchFail  })
+  expect(state.status.fetch).toEqual({
+    pending: true,
+    busy: false,
+    success: false,
+    payload: error
+  })
+  state = reducer(state, { payload: {}, type: actionClear })
+  expect(state.status.fetch).toEqual({ pending: null, id: null, success: null, payload: null, busy: false })
 })

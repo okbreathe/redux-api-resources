@@ -8,16 +8,13 @@ const RESOURCE_TYPES = [
 const RESOURCE_STATES = [
   'start',
   'success',
-  'failure'
+  'failure',
+  'clear'
 ]
 
 const CHANGESET_TYPES = [
   'set',
   'remove',
-]
-
-const STATUS_TYPES = [
-  'clear'
 ]
 
 /**
@@ -33,7 +30,6 @@ export default function resourceActionsTypes(resourceName: string, additionalTyp
   return {
     ...generateActionTypes(resourceName, additionalTypes.concat(RESOURCE_TYPES), RESOURCE_STATES),
     ...generateActionTypes(resourceName, ['changeset'], CHANGESET_TYPES),
-    ...generateActionTypes(resourceName, ['status'], STATUS_TYPES)
   }
 }
 

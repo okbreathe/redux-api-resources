@@ -4,6 +4,7 @@ interface ResourceReducerOptions<T> {
   idAttribute?: string
   singleton?: boolean
   onUpdate?: (prev: T, next: T) => T
+  changesetReducer?: (form: any, changeset: any) => any
   entityReducer?: (action: string, payload: any, meta: any) => any
   errorReducer?: (action: string, payload: any, meta: any) => any
 }
@@ -27,24 +28,19 @@ export default function resourceReducer<T>(resourceName: string, options?: Resou
     idAttribute: "id",
     singleton: false,
     onUpdate: (prev, next) => next,
-    // The change reducer gets a form, a field and value and should return the
-    // changed form In the simplest use case it simply assigns the field the
-    // value of the form
-    changesetReducer: (form: any, changeset: any) => ({ ...form, ...changeset}),
+    changesetReducer: (form, changeset) => ({ ...form, ...changeset}),
     entityReducer: (action, payload, meta) => payload,
     errorReducer: (action, payload, meta) => payload,
     ...options,
   }
 
   return function(state = initialResourceState<T>(), action: Action<T>){
-    // We're breaking up a string like USERS/FETCH/SUCCESS or USERS/CHANGESET/CREATE
+    // We're breaking up a string like USERS/FETCH/SUCCESS or USERS/CHANGESET/SET
     const [actionName, actionDomain, actionMethod] = action.type.split("/")
-    let newState
 
     if (name == actionName) {
       switch (actionDomain) {
         case 'CHANGESET': return handleChangeset(actionDomain, actionMethod, action, state, options)
-        case 'STATUS'   : return handleStatus(actionDomain, actionMethod, action, state, options)
         default         : return handleResource(actionDomain, actionMethod, action, state, options)
       }
     }
@@ -59,6 +55,7 @@ function handleResource(domain: string, method: string, action: Action<any>, sta
     case 'START'   : return handleStart(domain, action, newState, options)
     case 'SUCCESS' : return handleSuccess(domain, action, newState, options)
     case 'FAILURE' : return handleFailure(domain, action, newState, options)
+    case 'CLEAR'   : return handleClear(domain, action, newState, options)
   }
   return state
 }
@@ -85,12 +82,8 @@ function handleChangeset(domain: string, method: string, action: Action<any>, st
   return newState
 }
 
-function handleStatus(crudType: string, method: string, action: Action<any>, state: Resource<any>, options: any): Resource<any> {
-  switch (method) {
-    case 'CLEAR':
-      state.status[crudType.toLowerCase()] = defaultStatus()
-      break
-  }
+function handleClear(crudType: string, action: Action<any>, state: Resource<any>, options: any): Resource<any> {
+  state.status[crudType.toLowerCase()] = defaultStatus()
   return state
 }
 
@@ -110,17 +103,18 @@ function handleSuccess(crudType: string, action: Action<any>, state: Resource<an
 
   if (!payload) return state
 
-  status[crudType.toLowerCase()] = {
-    pending: false,
-    busy: false,
-    success: true,
-    payload: payload
-  }
-
   const newState = {
     results: state.results.slice(0),
     entities: {...state.entities},
-    status: {...status},
+    status: {
+      ...status,
+      [crudType.toLowerCase()]: {
+        pending: false,
+        busy: false,
+        success: true,
+        payload: payload
+      }
+    },
     meta: { ...state.meta },
     changeset: state.changeset
   }
