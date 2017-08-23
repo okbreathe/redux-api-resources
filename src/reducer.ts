@@ -163,8 +163,3 @@ function createStatus(){
 function defaultStatus(){
   return { pending: null, id: null, success: null, payload: null, busy: false }
 }
-
-
-// function destroyInCollection(payload, results, entities, idAttribute){
-// }
-//
