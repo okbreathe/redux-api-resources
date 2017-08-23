@@ -7,6 +7,8 @@ fetchClear()
 
 An opinioned library for working with collections of resources through redux.
 
+Tests for mutating resource
+
 CRUD
 
 Things which initiate CRUD, and the results of that

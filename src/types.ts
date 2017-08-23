@@ -36,3 +36,26 @@ export interface Resource<T> {
     [propName: string]: Status
   }
 }
+
+type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
+
+export interface ResourceActions<T> {
+    changesetSet: ResourceActionCreator<T>
+ changesetRemove: ResourceActionCreator<T>
+      fetchStart: ResourceActionCreator<T>
+    fetchSuccess: ResourceActionCreator<T>
+    fetchFailure: ResourceActionCreator<T>
+      fetchClear: ResourceActionCreator<T>
+     createStart: ResourceActionCreator<T>
+   createSuccess: ResourceActionCreator<T>
+   createFailure: ResourceActionCreator<T>
+     createClear: ResourceActionCreator<T>
+     updateStart: ResourceActionCreator<T>
+   updateSuccess: ResourceActionCreator<T>
+   updateFailure: ResourceActionCreator<T>
+     updateClear: ResourceActionCreator<T>
+    destroyStart: ResourceActionCreator<T>
+  destroySuccess: ResourceActionCreator<T>
+  destroyFailure: ResourceActionCreator<T>
+    destroyClear: ResourceActionCreator<T>
+}

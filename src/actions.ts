@@ -1,4 +1,6 @@
 import resourceActionTypes from './action_types'
+import { ResourceActions } from './types'
+
 /**
  *
  * Generates a standard set of resource action creators corresponding to
@@ -7,7 +9,7 @@ import resourceActionTypes from './action_types'
  * @return {Object}
  *
  */
-export default function resourceActions(resourceName: string){
+export default function resourceActions<T>(resourceName: string): ResourceActions<T> {
   if (!resourceName) throw new Error('Expected resource name')
   const actionTypes = resourceActionTypes(resourceName)
   return Object.keys(actionTypes).reduce((acc: any, key) => {
