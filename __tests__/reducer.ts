@@ -84,7 +84,7 @@ test('updates an existing item in the store', () => {
 })
 
 test('remove an item from the store', () => {
-  const payload = { id: 1 }
+  const payload = { id: "1" }
   const initialState = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
   const state = reducer(initialState, { payload, type: actionDestroy  })
 
@@ -96,6 +96,24 @@ test('remove an item from the store', () => {
 })
 
 test('removes multiple items from the store', () => {
+  const payload = ["1", "2", "3", "4", "5"]
+  let state = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
+  state = reducer(state, { payload, type: actionDestroy  })
+
+  expect(state.entities).toEqual({})
+  expect(state.results.length).toEqual(0)
+  expect(state.status.destroy.payload).toEqual(payload)
+  expect(state.status.destroy.pending).toEqual(false)
+  expect(state.status.destroy.success).toEqual(true)
+})
+
+test("Sets a resource's meta", () => {
+  const meta = { foo: 'bar' }
+  const state = reducer(initialResourceState<User>(), { payload: [], type: actionFetch, meta })
+  expect(state.meta).toEqual(meta)
+})
+
+test("Reset a resource to the inital state", () => {
 })
 
 test('Creating a changeset', () => {

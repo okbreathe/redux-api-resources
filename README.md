@@ -3,6 +3,7 @@
 fetchStart(meta)
 fetchSuccess(api.response, meta)
 fetchFailure(api.response, meta)
+fetchClear()
 
 An opinioned library for working with collections of resources through redux.
 

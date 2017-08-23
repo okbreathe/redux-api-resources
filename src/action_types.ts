@@ -22,7 +22,6 @@ const CHANGESET_TYPES = [
  * Generates an object containing actions in the format: RESOURCE_NAME/DOMAIN/METHOD
  * - action types corresponding to standard REST-based actions
  * - action types for modifying resources
- * - action types for clearing the status of a resource
  */
 export default function resourceActionsTypes(resourceName: string, additionalTypes: string[] = []){
   if (!resourceName) throw new Error('Expected resource name')
