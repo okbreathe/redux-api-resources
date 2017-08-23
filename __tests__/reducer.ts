@@ -14,6 +14,9 @@ const actionCreate  = "USERS/CREATE/SUCCESS"
 const actionUpdate  = "USERS/UPDATE/SUCCESS"
 const actionDestroy = "USERS/DESTROY/SUCCESS"
 
+const changesetSet = "USERS/CHANGESET/SET"
+const changesetRemove = "USERS/CHANGESET/REMOVE"
+
 const reducer = resourceReducer("users")
 
 // test that id can be number
@@ -92,4 +95,33 @@ test('remove an item from the store', () => {
 })
 
 test('removes multiple items from the store', () => {
+})
+
+test('Creating a changeset', () => {
+  let state = reducer(initialResourceState<User>(), { payload: {}, type: changesetSet })
+  expect(state.changeset).toEqual({ default: {} })
+
+  state = reducer(initialResourceState<User>(), { payload: { foo: 'bar' }, type: changesetSet })
+  expect(state.changeset).toEqual({ default: { foo: 'bar' } })
+
+  state = reducer(initialResourceState<User>(), { payload: { foo: 'bar' }, meta: { form: 'myForm' }, type: changesetSet })
+  expect(state.changeset).toEqual({ myForm: { foo: 'bar' } })
+})
+
+test('Updating a changeset', () => {
+  let state = reducer(initialResourceState<User>(), { payload: {foo: 'bar'}, type: changesetSet })
+  state = reducer(state, { payload: { foo: 'quux' }, type: changesetSet })
+  expect(state.changeset).toEqual({ default: { foo: 'quux' } })
+})
+
+test('Removing a changeset', () => {
+  let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetSet })
+  state = reducer(state, { payload: {}, type: changesetRemove })
+  expect(state.changeset).toEqual({ default: {} })
+})
+
+test('Removing a changeset field', () => {
+  let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetSet })
+  state = reducer(state, { payload: {}, type: changesetRemove, meta: { field: 'foo' } })
+  expect(state.changeset).toEqual({ default: { baz: 'quux' } })
 })

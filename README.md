@@ -1,5 +1,9 @@
 # Redux API Resources
 
+fetchStart(meta)
+fetchSuccess(api.response, meta)
+fetchFailure(api.response, meta)
+
 An opinioned library for working with collections of resources through redux.
 
 CRUD
@@ -42,6 +46,13 @@ resourceActions - Generate a standard set of actions
 resourceReducer - Generate a reducer for set of actions
 
 resourceFor - Generate types, actions and a reducer
+
+createReduxResource => alias for resourceFor
+users: reduxResource(state.resource) => convience wrapper
+
+users.map
+users.find
+users.find
 
 ## Problems
 

@@ -12,9 +12,8 @@ const RESOURCE_STATES = [
 ]
 
 const CHANGESET_TYPES = [
-  'create',
-  'update',
-  'destroy'
+  'set',
+  'remove',
 ]
 
 const STATUS_TYPES = [

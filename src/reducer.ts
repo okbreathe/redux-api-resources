@@ -27,15 +27,10 @@ export default function resourceReducer<T>(resourceName: string, options?: Resou
     idAttribute: "id",
     singleton: false,
     onUpdate: (prev, next) => next,
-    // The form reducer gets a resource and should return a form representation
-    // of it. In the simplest use case this can be identical to the resource
-    // itself, however if you need to use the data with more complex form
-    // widgets, you might need to transform it into a compatible object
-    changesetReducer: (resource: any) => resource,
     // The change reducer gets a form, a field and value and should return the
     // changed form In the simplest use case it simply assigns the field the
     // value of the form
-    changeReducer: (form: any, field: string, value: any) => ( { ...form, [field]: value } ),
+    changesetReducer: (form: any, changeset: any) => ({ ...form, ...changeset}),
     entityReducer: (action, payload, meta) => payload,
     errorReducer: (action, payload, meta) => payload,
     ...options,
@@ -69,35 +64,25 @@ function handleResource(domain: string, method: string, action: Action<any>, sta
 }
 
 function handleChangeset(domain: string, method: string, action: Action<any>, state: Resource<any>, options: any): Resource<any> {
-  const { formReducer, changeReducer } = options
+  const { changesetReducer, changeReducer } = options
   let newState = { ...state, changeset: {...state.changeset} }
   const { payload, meta = {} } = action
-  const { field, form } = meta
+  const { field, form = 'default' } = meta
 
   switch (method) {
-    case 'CREATE':
-      newState.changeset[form] = formReducer(payload) || {}
-      break;
-    case 'UPDATE':
-      formExists(newState, form)
-      newState.changeset[form] = changeReducer(state.changeset[form], field, payload)
-      break;
-    case 'DESTROY':
-      formExists(newState, form)
+    case 'SET':
+      newState.changeset[form] = changesetReducer(state.changeset[form], payload)
+      break
+    case 'REMOVE':
       if (field) {
         delete newState.changeset[form][field]
       } else {
         newState.changeset[form] = {}
       }
-      break;
-    default:
+      break
   }
 
   return newState
-}
-
-function formExists(state: any, form: string) {
-  if (!state[form]) console.error(`Form '${form}' is not set. Did you initialize the form? Existing form keys '${Object.keys(state).join(', ')}' `)
 }
 
 function handleStatus(crudType: string, method: string, action: Action<any>, state: Resource<any>, options: any): Resource<any> {

@@ -2,9 +2,8 @@ import { resourceActionTypes } from '../src'
 
 test('Generates Action Types for a resource', () => {
   expect(resourceActionTypes("users")).toEqual({
-     changesetCreate: 'USERS/CHANGESET/CREATE',
-     changesetUpdate: 'USERS/CHANGESET/UPDATE',
-    changesetDestroy: 'USERS/CHANGESET/DESTROY',
+        changesetSet: 'USERS/CHANGESET/SET',
+    changesetRemove: 'USERS/CHANGESET/REMOVE',
          statusClear: 'USERS/STATUS/CLEAR',
           fetchStart: 'USERS/FETCH/START',
         fetchSuccess: 'USERS/FETCH/SUCCESS',
