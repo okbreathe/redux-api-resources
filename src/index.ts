@@ -24,101 +24,37 @@ export function createResource<T>(resourceName: string){
   }
 }
 
-// There's a couple different things here
-//
-// createResource isn't a resource, so we wouldn't have access to the actions yet
+// The problem is we're using both high and low level components without a clear distinction
 
-// const ordersResource= resource(dispatch, state.orders)
+// We're just trying to bind the action creators ...
+// The only question is where the form shit goes
+// 1) We can just add it to the actions
+export function bindResource<T>(dispatch: ActionCreatorsMapObject, actions: ResourceActions<T>){
+  return bindActionCreators(dispatch, (actions as any))
+}
 
-// Basically this is supposed to wrap the resource so you don't have to import a bunch
-// of shit
-//
-// So currently we export all of the created resource
-
-// We need
-// 1) The state, resource = state
-// 2) The actions = from createResource
-export function bindResource<T>(dispatch: ActionCreatorsMapObject, res: Resource<T>, actions: ResourceActions<T>){
+// The form is at a higher level than the actions. This is probably the correct way to do it
+// The issue is just having to pass all these arguments in
+// Do we need to know about the state? Could this be separated further
+export function resourceForm<T>(actions: ResourceActions<T>, resource: Resource<T>, key?: string){
+  // I think that changeset actions are so confusing that means the API is bad,
+  // I do think we should just have higher level action creators that take advantage of it
   return {
-    each(fn: (entity: T) => void) { return selectors.each(res, fn) },
-
-    filter(pred: (entity: T) => any) { return selectors.filter(res, pred) },
-
-    first(fn: (entity: T) => T | undefined) { return selectors.first(res, fn) },
-
-    find(fn: (entity: T) => T | undefined) { return selectors.find(res, fn) },
-
-    last(fn: (entity: T) => T | undefined) { return selectors.last(res, fn) },
-
-    map(fn: (entity: T, index: number) => any) { return selectors.map(res, fn) },
-
-    not(pred: (entity: T) => T | undefined) { return selectors.not(res, pred) },
-
-    reduce(fn: (entity: T) => any, init: any) { return selectors.reduce(res, fn, init) },
-
-    sort(fn: (a: T, b: T) => number) { return selectors.sort(res, fn) },
-
-    toArray(){ return selectors.toArray(res) },
-
-    actions: bindActionCreators(dispatch, (actions as any)),
-
-    form: {
-    }
-
-    // 1) We want to create an actionCreator/actionProducer that automatically hooks up events to state changes
-    // 2) We want to be able to get/set/clear the value of the form
-    // The only thing we need is dispatch
-    //
-    // Previously the form was considered an action which didn't make sense because it creates a producer
+    state: {}, // Can be retrieved from resource.changeset
+    set: {}, // actions.changesetSet(changes, meta)
+    remove: {}, // actions.changesetRemove(changes, meta)
+    clear: {}, // actions.changesetRemove({}, meta)
+    field: {}, // binds form Events to actions.changeset
   }
 }
 
-    // #<{(|
-    //  * Copy the payload into an editable form object
-    //  |)}>#
-    // init(payload: any) {
-    // },
-    // #<{(|
-    //  * Clear given fields or entire form
-    //  |)}>#
-    // clear(...fields: any[]) {
-    // },
-    // #<{(|
-    //  * Change given fields
-    //  *
-    //  * Expects keys to be field names and values to be field values
-    //  |)}>#
-    // change(fields = {}) {
-    // },
-    // #<{(|
-    //  * Return the current form errors
-    //  |)}>#
-    // errors(action: string = "", fieldKey?: string) {
-    //   action = action.toLowerCase()
-    //   if (actions.indexOf(action) == -1) {
-    //     console.warn(`Invalid action type ${action}. Must be one of ${actions.join(', ')}`)
-    //     return {}
-    //   }
-    //   const status = res.status
-    //   const errors = !status[action].success && status[action].payload || {}
-    //
-    //   return fieldKey
-    //     ? errors[fieldKey]
-    //     : errors
-    // },
-    // #<{(|
-    //  * Return the current state of the form.
-    //  *
-    //  * Returns all fields by default but can be limited to selected
-    //  * fields by passing the field names in as arguments
-    //  |)}>#
-    // state(...fields: string[]) {
-    // },
-    // #<{(|*
-    //  * Generates a field that dispatches change actions
-    //  *
-    //  * Use the field generator on a component
-    //  * <input {...field("name", { options })} />
-    //  |)}>#
-    // field(name: string, ...args: any[]) {
-    // }
+// I guess there's two things we're doing
+// set / remove / clear - just convenience wrappers around CHANGESET/SET nad CHANGESET/REMOVE
+// The difference is we just bind the meta { form }
+//
+// state = resource.changeset
+//
+// field listens to state and dispatches actions
+//
+// This needs to know about state and actions
+// const field = fieldSet(formKey)
