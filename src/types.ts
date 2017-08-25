@@ -58,4 +58,5 @@ export interface ResourceActions<T> {
   destroySuccess: ResourceActionCreator<T>
   destroyFailure: ResourceActionCreator<T>
     destroyClear: ResourceActionCreator<T>
+   resourceForm?: Function
 }
