@@ -22,9 +22,18 @@ export function createResource<T>(resourceName: string){
   }
 }
 
-export function bindResource<T>(resource: Resource<T>){
+/**
+ * Wrap a raw resource in selectors so you don't hae to import anything
+ * { resource: resourceWithSelectors(resource) }
+ *
+ * resource.
+ *
+ */
+export function resourceWithSelectors<T>(resource: Resource<T>){
   return {
-    each(fn: (entity: T) => void) { return selectors.each(resource, fn) },
+    ...resource,
+
+    forEach(fn: (entity: T) => void) { return selectors.forEach(resource, fn) },
 
     filter(pred: (entity: T) => any) { return selectors.filter(resource, pred) },
 

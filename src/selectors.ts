@@ -1,7 +1,7 @@
 import { Id, Resource } from './types'
 
 // iterate over entities in order
-export function each<T>(resource: Resource<T>, fn: (entity: T) => void): void{
+export function forEach<T>(resource: Resource<T>, fn: (entity: T) => void): void{
   return resource.results.forEach(id => fn(resource.entities[id]))
 }
 
@@ -18,12 +18,12 @@ export function toArray<T>(resource: Resource<T>): T[] {
 // Filters a collection
 export function filter<T>(resource: Resource<T>, fn: (entity: T) => any): T[] {
   const ret: T[] = []
-  each(resource, (e) => { if (fn(e)) ret.push(e) })
+  forEach(resource, (e) => { if (fn(e)) ret.push(e) })
   return ret
 }
 
 // Reduce entities into a new value
-export function reduce<T>(resource: Resource<T>, fn: Function, init: any): any {
+export function reduce<T>(resource: Resource<T>, fn: Function, init?: any): any {
   return resource.results.reduce((acc, id, idx, arr) => fn(acc, resource.entities[id], idx, arr), init)
 }
 
@@ -73,7 +73,7 @@ export function sort<T>(resource: Resource<T>, fn: (a: T, b: T) => number): T[]{
 }
 
 export default {
-  each,
+  forEach,
   filter,
   first,
   find,

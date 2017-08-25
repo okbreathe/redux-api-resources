@@ -6,7 +6,7 @@ interface User {
 }
 
 import {
-  each,
+  forEach,
   filter,
   first,
   find,
@@ -34,10 +34,13 @@ const resource = {
 }
 
 test('each iterates over entities in order', () => {
+  const arr: number[] = []
+  forEach(resource, (u: User) => arr.push(parseInt(u.id)))
+  expect(arr).toEqual([1,2,3])
 })
 
 test('map entities', () => {
-  expect(map(resource, (r: any) => r.id)).toEqual(["1", "2", "3"])
+  expect(map(resource, (u: User) => u.id)).toEqual(["1", "2", "3"])
 })
 
 test('toArray converts entities into a plain array', () => {
@@ -45,13 +48,13 @@ test('toArray converts entities into a plain array', () => {
 })
 
 test('filter entities', () => {
-  expect(filter(resource, (u: any) => u.id == "1")).toEqual([users[0]])
+  expect(filter(resource, (u: User) => u.id == "1")).toEqual([users[0]])
 })
 
 test('reduce entities into a new value', () => {
+  expect(reduce<User>(resource, ((acc: number, u: User) => acc + parseInt(u.id)), 0)).toEqual(6)
 })
 
-//
 test('first - return returns the first entity for its predicate', () => {
   expect(first(resource)).toEqual(users[0])
   expect(first(resource, u => u.id == "2")).toEqual(users[1])
@@ -73,5 +76,5 @@ test('not - get entities without ids', () => {
 })
 
 test('sort entities', () => {
-  expect(sort(resource, (a: any, b: any) => a.id == b.id ? 0 : (a.id < b.id ? 1 : -1))).toEqual(users.reverse())
+  expect(sort(resource, (a: User, b: User) => a.id == b.id ? 0 : (a.id < b.id ? 1 : -1))).toEqual(users.reverse())
 })
