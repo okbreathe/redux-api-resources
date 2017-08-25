@@ -2,7 +2,6 @@ import { Action, Status, Resource } from './types'
 
 interface ResourceReducerOptions<T> {
   idAttribute?: string
-  singleton?: boolean
   onUpdate?: (prev: T, next: T) => T
   changesetReducer?: (form: any, changeset: any) => any
   entityReducer?: (action: string, payload: any, meta: any) => any
@@ -26,7 +25,6 @@ export default function resourceReducer<T>(resourceName: string, options?: Resou
 
   options = {
     idAttribute: "id",
-    singleton: false,
     onUpdate: (prev, next) => next,
     changesetReducer: (form, changeset) => ({ ...form, ...changeset}),
     entityReducer: (action, payload, meta) => payload,
