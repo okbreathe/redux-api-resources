@@ -10,8 +10,6 @@ export { resourceActionTypes, resourceActions, resourceReducer }
 export * from './types'
 export * from './selectors'
 
-const actions = ['fetch','create','update','destroy']
-
 /**
  * Generate a resource in the redux store
  * const resource = createResource<MyModel>("models");
@@ -24,37 +22,26 @@ export function createResource<T>(resourceName: string){
   }
 }
 
-// The problem is we're using both high and low level components without a clear distinction
-
-// We're just trying to bind the action creators ...
-// The only question is where the form shit goes
-// 1) We can just add it to the actions
-export function bindResource<T>(dispatch: ActionCreatorsMapObject, actions: ResourceActions<T>){
-  return bindActionCreators(dispatch, (actions as any))
-}
-
-// The form is at a higher level than the actions. This is probably the correct way to do it
-// The issue is just having to pass all these arguments in
-// Do we need to know about the state? Could this be separated further
-export function resourceForm<T>(actions: ResourceActions<T>, resource: Resource<T>, key?: string){
-  // I think that changeset actions are so confusing that means the API is bad,
-  // I do think we should just have higher level action creators that take advantage of it
+export function bindResource<T>(resource: Resource<T>){
   return {
-    state: {}, // Can be retrieved from resource.changeset
-    set: {}, // actions.changesetSet(changes, meta)
-    remove: {}, // actions.changesetRemove(changes, meta)
-    clear: {}, // actions.changesetRemove({}, meta)
-    field: {}, // binds form Events to actions.changeset
+    each(fn: (entity: T) => void) { return selectors.each(resource, fn) },
+
+    filter(pred: (entity: T) => any) { return selectors.filter(resource, pred) },
+
+    first(fn: (entity: T) => T | undefined) { return selectors.first(resource, fn) },
+
+    find(fn: (entity: T) => T | undefined) { return selectors.find(resource, fn) },
+
+    last(fn: (entity: T) => T | undefined) { return selectors.last(resource, fn) },
+
+    map(fn: (entity: T, index: number) => any) { return selectors.map(resource, fn) },
+
+    not(pred: (entity: T) => T | undefined) { return selectors.not(resource, pred) },
+
+    reduce(fn: (entity: T) => any, init: any) { return selectors.reduce(resource, fn, init) },
+
+    sort(fn: (a: T, b: T) => number) { return selectors.sort(resource, fn) },
+
+    toArray(){ return selectors.toArray(resource) },
   }
 }
-
-// I guess there's two things we're doing
-// set / remove / clear - just convenience wrappers around CHANGESET/SET nad CHANGESET/REMOVE
-// The difference is we just bind the meta { form }
-//
-// state = resource.changeset
-//
-// field listens to state and dispatches actions
-//
-// This needs to know about state and actions
-// const field = fieldSet(formKey)
