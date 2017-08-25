@@ -1,6 +1,6 @@
 import resourceActionTypes from './action_types'
 import { ResourceActions } from './types'
-import form from './form
+import form from './form'
 
 /**
  *
@@ -13,10 +13,12 @@ import form from './form
 export default function resourceActions<T>(resourceName: string): ResourceActions<T> {
   if (!resourceName) throw new Error('Expected resource name')
   const actionTypes = resourceActionTypes(resourceName)
-  return Object.keys(actionTypes).reduce((acc: any, key) => {
+  const actions = Object.keys(actionTypes).reduce((acc: any, key) => {
     acc[key] = createAction(actionTypes[key])
     return acc
-  }, { form })
+  }, {})
+  actions.resourceForm = form(resourceName, actions)
+  return actions
 }
 
 function createAction(type: string) {

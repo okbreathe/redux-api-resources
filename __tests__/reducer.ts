@@ -141,7 +141,7 @@ test('Removing a changeset', () => {
 
 test('Removing a changeset field', () => {
   let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetSet })
-  state = reducer(state, { payload: {}, type: changesetRemove, meta: { field: 'foo' } })
+  state = reducer(state, { payload: ['foo'], type: changesetRemove })
   expect(state.changeset).toEqual({ default: { baz: 'quux' } })
 })
 

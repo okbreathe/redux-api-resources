@@ -64,15 +64,17 @@ function handleChangeset(domain: string, method: string, action: Action<any>, st
   const { changesetReducer, changeReducer } = options
   let newState = { ...state, changeset: {...state.changeset} }
   const { payload, meta = {} } = action
-  const { field, form = 'default' } = meta
+  const { form = 'default' } = meta
 
   switch (method) {
     case 'SET':
       newState.changeset[form] = changesetReducer(state.changeset[form], payload)
       break
     case 'REMOVE':
-      if (field) {
-        delete newState.changeset[form][field]
+      if (Array.isArray(payload)) {
+        payload.forEach((field: string) => {
+          delete newState.changeset[form][field]
+        })
       } else {
         newState.changeset[form] = {}
       }
