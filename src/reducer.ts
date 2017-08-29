@@ -150,10 +150,10 @@ function destroyInResource(payload: any, action: Action<any>, state: Resource<an
   payload = Array.isArray(payload) ? payload : [payload]
   payload.forEach((obj: any) => {
     const id  = typeof obj === "number" || typeof obj === "string" ? obj : obj[options.idAttribute]
-    console.log(id)
     const idx = results.indexOf(id)
 
     if (idx > -1) results.splice(idx, 1)
+
     delete entities[id]
   })
 

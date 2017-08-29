@@ -63,7 +63,7 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
           const val = form[field]
           const handler = function(value: any, eventType: string){
             const fieldData = { field, name, property, value, eventType, previousValue: val }
-            const ret = dispatch(actions.changesetSet({ [key]: normalize(value, fieldData) }, { form: key }))
+            const ret = dispatch(actions.changesetSet({ [field]: normalize(value, fieldData) }, { form: key }))
             afterChange(value, fieldData)
             return ret
           }
