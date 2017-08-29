@@ -8,18 +8,17 @@ Depending on how you structure your Redux app, your usage may very
 
 ```typescript
 // Generate action types for a "users" resource
-const types = resourceActionTypes("users"),
+const types = resourceActionTypes(name: string),
 
 // Generate actions for a "users" resource
-const actions = resourceActions("users"),
+const actions = resourceActions(name: string),
 
 // Generate a reducer for a "users" resource
-const reducer = resourceReducer<T>("users", options?: any),
+const reducer = resourceReducer<T>(name: string, options?: any),
 
 // Generate action types, actions and an reducer for a "users" resource
-const { actions, types, reducer } = resourceFor("users", options?: any)
+const { actions, types, reducer } = resourceFor(name: string, options?: any)
 ```
-
 A resource is defined in the store as:
 
 ```typescript
@@ -75,29 +74,29 @@ actions.changesetRemove(payload: string[] | true, meta?: { form: string }) // =>
 #### Form Helper
 
 Creating and updating resources are extremely common activities, as such there's a helper method that encapsulates
-updating the store with user input.
+updating the store in reaction to user input.
 
 ```typescript
 import { bindActionCreators } from 'redux'
 
 const actions = resourceActions("users")
-const form = actions.resourceForm(uniqueKey = 'default')
+const form = actions.resourceForm(uniqueFormKey = 'default')
 ```
 
 A generated `resourceForm` has four methods:
 
 ```typescript
   // Set the given key values in the changeset
-  set(changes: [key: string]: any)
+  set(changes: { [key: string]: any })
 
   // Remove the given keys from the changeset
   remove(...fields: string[])
 
-  // Remoe all keys from the changeset
+  // Remove everything from the changeset
   clear()
 
   // Creates an action dispatcher, detailed below
-  field(name: string, args: any)
+  field(name: string, options: {})
 ```
 
 #### Field Action dispatcher
@@ -108,12 +107,13 @@ changes to the changeset. This can then be used on an input by using the spread 
 ```typescript
 <input type="string" {...field("name")} />
 ```
+The following options can also be specified:
 
-### Selectors
+### Collection Helpers
 
 As resources are stored both as key/values and an ordered set of ids, working
-with them isn't as straight forward as an array of objects. There are selectors
-defined for performing commong operations on collections, e.g. `map`, `reduce`,
+with them isn't as straight forward as a simple array of objects. There are a number of
+functions defined for performing commong operations on collections, e.g. `map`, `reduce`,
 `filter` etc.
 
 ```typescript
@@ -122,17 +122,20 @@ import { map, reduce, filter } from 'redux-api-resources'
 map(myResource, r => r)
 ```
 
-You can also wrap a resource so that you can call the methods directly on the resource
+You can also wrap a resource so that you can call the methods directly on the resource itself
 
 ```typescript
-import { resourceWithSelectors } from 'redux-api-resources'
+import { resourceWithHelpers } from 'redux-api-resources'
 
-const wrappedResource = resourceWithSelectors(myResource)
+const wrappedResource = resourceWithHelpers(myResource)
 
 wrappedResource.map(r => r)
 ```
 
 ### Reducer Options
+
+When creating a reducer either through `resourceReducer<T>` or `resourceFor`, there are a number
+of options for customizing how data is updated in the store:
 
 ```typescript
 {

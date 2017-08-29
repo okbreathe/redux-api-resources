@@ -3,12 +3,12 @@ import { bindActionCreators, ActionCreatorsMapObject } from 'redux'
 import resourceActionTypes from './action_types'
 import resourceActions from './actions'
 import resourceReducer from './reducer'
-import * as selectors from './selectors'
+import * as selectors from './helpers'
 import { Action, Resource, ResourceActions } from './types'
 
 export { resourceActionTypes, resourceActions, resourceReducer }
 export * from './types'
-export * from './selectors'
+export * from './helpers'
 
 /**
  * Generate a resource in the redux store
@@ -29,7 +29,7 @@ export function createResource<T>(resourceName: string){
  * resource.
  *
  */
-export function resourceWithSelectors<T>(resource: Resource<T>){
+export function resourceWithHelpers<T>(resource: Resource<T>){
   return {
     ...resource,
 
