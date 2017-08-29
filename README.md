@@ -89,6 +89,12 @@ A generated `resourceForm` has four methods:
   // Set the given key values in the changeset
   set(changes: { [key: string]: any })
 
+  // Retrieve the current changeset, optionally one or more keys to retrieve
+  changeset(...keys: string[])
+
+  // Retrieve the errors for a given CRUD update 'create', 'update', 'fetch', destroy
+  errors(which: string)
+
   // Remove the given keys from the changeset
   remove(...fields: string[])
 

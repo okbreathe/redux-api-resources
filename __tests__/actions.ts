@@ -69,6 +69,22 @@ test('clears form', () => {
   expect(store.getActions()).toEqual(expectedActions)
 })
 
+test('can retrieve the current changeset', () => {
+  const state = { foo: 1, bar: 2 }
+  const store = mockStore({ users: { changeset: { default: state } } })
+  const actions = unboundActions(store.dispatch, store.getState)
+
+  expect(actions.changeset()).toEqual(state)
+  expect(actions.changeset('foo')).toEqual({ foo: 1 })
+})
+
+test('form helper can retrieve current errors', () => {
+  const errors = { foo: "cannot be blank" }
+  const store = mockStore({ users: { status: { create: { pendingUpdate: false, id: null, success: false, payload: errors, busy: false } } } })
+  const actions = unboundActions(store.dispatch, store.getState)
+  expect(actions.errors('create')).toEqual(errors)
+})
+
 test('form helper generates a field change action creator', () => {
   const store = mockStore({ users: { changeset: {} } })
   const actions = unboundActions(store.dispatch, store.getState)

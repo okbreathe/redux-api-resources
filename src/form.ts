@@ -9,12 +9,15 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
   return function(key = defaultFormKey) {
     return (dispatch: Function, getState: () => any) => {
       return {
-        set(changes: any){
+        /*
+         * Add or replace given fields given fields
+         */
+        set(changes: { [key: string]: any }){
           dispatch(actions.changesetSet(changes, { form: key }))
         },
 
         /*
-         * Rmove given fields
+         * Remove given fields
          */
         remove(...fields: string[]){
           dispatch(actions.changesetRemove(fields, { form: key }))
@@ -52,8 +55,8 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
          * Returns all fields by default but can be limited to selected
          * fields by passing the field names in as arguments
          */
-        state(...fields: string[]) {
-          const state = getState()[resourceName][key] || {}
+        changeset(...fields: string[]) {
+          const state = getState()[resourceName].changeset[key] || {}
           return fields.length
             ? fields.reduce((acc: any, f) => { acc[f] = state[f]; return acc }, {})
             : state
