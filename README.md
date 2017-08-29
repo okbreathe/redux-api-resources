@@ -109,6 +109,27 @@ changes to the changeset. This can then be used on an input by using the spread 
 ```
 The following options can also be specified:
 
+```typescript
+{
+  storeKey = null,
+  valueKey = 'value',
+  eventType = 'onChange',
+  defaultValue = "",
+  afterEvent = (value: any, fieldData: any) => undefined,
+  normalize = (value: any, fieldData: any) => value,
+  format = (value: any, name: string) => value,
+  eventHandler = (e: any, a: any, b: any, c: any) => e && e.target ? e.target.value : e
+}
+```
+* storeKey - By default the name of this field will be used as the key in the changeset. You can use a different key in the store by specifying a storeKey
+* valueKey - Which property that will be set when the field changes
+* eventType - The events we're listening to. Can be a string or an array of strings
+* defaultValue - The value used if no value currently exists in the changeset
+* afterEvent - Callback fired immediately after and event is triggered, but before the store is updated
+* normalize - Normalize input for the Redux store. Common use cases are maintaining data as Numbers or Dates in the store, while displaying them differently
+* format - Formats the value in the Redux store to be used in your input component. Used in conjunction with normalize to maintain the correct state and view types
+* eventHandler - Handles all events specified by `eventType` Should return the value for the store
+
 ### Collection Helpers
 
 As resources are stored both as key/values and an ordered set of ids, working
@@ -152,12 +173,3 @@ of options for customizing how data is updated in the store:
 * changesetReducer - applied when merging changesets
 * entityReducer - applied when merging entities into the store
 * errorReducer - applied when adding errors to an action's status
-
-## Problems
-
-- Unclear usage with checkbox / select
-- Boilerplate of setting up resources
-
-# TODO
-
-- Use `key` instead of `form` for changeset

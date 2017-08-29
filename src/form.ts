@@ -3,6 +3,7 @@ import { ActionCreatorsMapObject } from 'redux'
 import { ResourceActions, Resource } from './types'
 
 const defaultFormKey = 'default'
+const crudActions = ['fetch','create','update','destroy']
 
 export default function<T>(resourceName: string, actions: ResourceActions<T>) {
   return function(key = defaultFormKey) {
@@ -26,6 +27,38 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
           dispatch(actions.changesetRemove(null, { form: key }))
         },
 
+        /*
+         * Return the current form errors
+         */
+        errors(action: string, fieldKey: string = "") {
+          action = action.toLowerCase()
+
+          if (crudActions.indexOf(action) == -1) {
+            console.warn(`Invalid action type ${action}. Must be one of ${crudActions.join(', ')}`)
+            return {}
+          }
+
+          const status = getState()[resourceName].status
+          const errors = !status[action].success && status[action].payload || {}
+
+          return fieldKey
+            ? errors[fieldKey]
+            : errors
+        },
+
+        /*
+         * Return the current state of the form.
+         *
+         * Returns all fields by default but can be limited to selected
+         * fields by passing the field names in as arguments
+         */
+        state(...fields: string[]) {
+          const state = getState()[resourceName][key] || {}
+          return fields.length
+            ? fields.reduce((acc: any, f) => { acc[f] = state[f]; return acc }, {})
+            : state
+        },
+
         /**
          * Generates a field that dispatches change actions
          *
@@ -34,37 +67,38 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
          */
         field(name: string, args: any) {
           let {
-            // If the field name doesn't correspond to the property in the
-            // redux store
-            property = null,
-            // Which UI property the value will set
+            // By default the name of this field will be used as the key in the
+            // changeset. You can use a different key in the store by
+            // specifying a storeKey
+            storeKey = null,
+            // Which property that will be set when the field changes
             valueKey = 'value',
-            // Which events we're listening to. Can be a string or an array of strings
+            // The events we're listening to. Can be a string or an array of strings
             eventType = 'onChange',
-            // Value for the input if none is specified
+            // The value used if no value currently exists in the changeset
             defaultValue = "",
             // Callback fired immediately after and event is triggered, but
-            // before the store is updated TODO change to afterEvent
-            afterChange = (value: any, fieldData: any) => undefined,
-            // Ngrmalize input into the data that you want to in the Redux
-            // store. Common use cases are for maintaining data as Numbers or
-            // Dates in the store.
+            // before the store is updated
+            afterEvent = (value: any, fieldData: any) => undefined,
+            // Normalize input for the Redux store. Common use cases are
+            // maintaining data as Numbers or Dates in the store, while
+            // displaying them differently
             normalize = (value: any, fieldData: any) => value,
             // Formats the value in the Redux store to be used in your input
-            // component.
+            // component. Used in conjunction with normalize to maintain the
+            // correct state and view types
             format = (value: any, name: string) => value,
-            // receives the results of a given event. Some events return Event
-            // objects, other values. The handler should return the value for
-            // the store
+            // Handles all events specified by `eventType` Should return the
+            // value for the store
             eventHandler = (e: any, a: any, b: any, c: any) => e && e.target ? e.target.value : e
           } = (args || {})
-          const field = property || name
+          const field = storeKey || name
           const form = getState()[resourceName].changeset[key] || {}
           const val = form[field]
           const handler = function(value: any, eventType: string){
-            const fieldData = { field, name, property, value, eventType, previousValue: val }
+            const fieldData = { field, name, storeKey, value, eventType, previousValue: val }
             const ret = dispatch(actions.changesetSet({ [field]: normalize(value, fieldData) }, { form: key }))
-            afterChange(value, fieldData)
+            afterEvent(value, fieldData)
             return ret
           }
           const ret = {
