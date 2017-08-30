@@ -17,10 +17,10 @@ export interface FormMeta {
 }
 
 export interface Status {
-   pending: Empty
-   success: Empty
-   payload: any
-   busy: boolean
+  pending: Empty
+  success: Empty
+  payload: any
+  busy: boolean
 }
 
 export interface Resource<T> {
@@ -37,7 +37,15 @@ export interface Resource<T> {
   }
 }
 
-type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
+export interface ResourceReducerOptions<T> {
+  idAttribute?: string
+  onUpdate?: (prev: T, next: T) => T
+  changesetReducer?: (form: any, changeset: any) => any
+  entityReducer?: (action: string, payload: any, meta: any) => any
+  errorReducer?: (action: string, payload: any, meta: any) => any
+}
+
+export type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
 
 export interface ResourceActions<T> {
     changesetSet: ResourceActionCreator<T>
@@ -59,4 +67,17 @@ export interface ResourceActions<T> {
   destroyFailure: ResourceActionCreator<T>
     destroyClear: ResourceActionCreator<T>
     resourceForm: Function
+}
+
+export interface ResourceWithHelpers<T> extends Resource<T> {
+  forEach: (fn: (entity: T) => void) => void
+  filter: (pred: (entity: T) => any) => T[]
+  first: (fn: (entity: T) => T | undefined) => T | undefined
+  get: (fn: (entity: T) => T | undefined) => T[] | undefined
+  last: (fn: (entity: T) => T | undefined) => T | undefined
+  map: (fn: (entity: T, index: number) => any) => any[]
+  not: (pred: (entity: T) => T | undefined) => T[]
+  reduce: (fn: (entity: T) => any, init: any) => any
+  sort: (fn: (a: T, b: T) => number) => T[]
+  toArray: () => T[]
 }

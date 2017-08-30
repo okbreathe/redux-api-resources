@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Opinioned library for working with collections of resources through redux",
   "main": "dist/index.js",
+  "types": "dist/index.d.js",
   "directories": {
     "dist": "dist",
     "docs": "docs",
@@ -10,8 +11,8 @@
     "src": "src"
   },
   "scripts": {
-    "build": "npm run build:dist && npm run build:es && npm run build:umd && npm run build:umd:min",
-    "build:dist": "babel src --out-dir dist",
+    "prepublish": "yarn run build",
+    "build": "tsc",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watchAll --notify"

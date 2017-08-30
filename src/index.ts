@@ -3,8 +3,8 @@ import { bindActionCreators, ActionCreatorsMapObject } from 'redux'
 import resourceActionTypes from './action_types'
 import resourceActions from './actions'
 import resourceReducer from './reducer'
-import * as selectors from './helpers'
-import { Action, Resource, ResourceActions } from './types'
+import * as helpers from './helpers'
+import { Action, Resource, ResourceActions, ResourceWithHelpers  } from './types'
 
 export { resourceActionTypes, resourceActions, resourceReducer }
 export * from './types'
@@ -23,34 +23,31 @@ export function createResource<T>(resourceName: string){
 }
 
 /**
- * Wrap a raw resource in selectors so you don't hae to import anything
- * { resource: resourceWithSelectors(resource) }
- *
- * resource.
+ * Wrap a resource with helpers functions
  *
  */
-export function resourceWithHelpers<T>(resource: Resource<T>){
+export function resourceWithHelpers<T>(resource: Resource<T>): ResourceWithHelpers<T>{
   return {
     ...resource,
 
-    forEach(fn: (entity: T) => void) { return selectors.forEach(resource, fn) },
+    forEach(fn: (entity: T) => void) { return helpers.forEach(resource, fn) },
 
-    filter(pred: (entity: T) => any) { return selectors.filter(resource, pred) },
+    filter(pred: (entity: T) => any) { return helpers.filter(resource, pred) },
 
-    first(fn: (entity: T) => T | undefined) { return selectors.first(resource, fn) },
+    first(fn: (entity: T) => T | undefined) { return helpers.first(resource, fn) },
 
-    find(fn: (entity: T) => T | undefined) { return selectors.find(resource, fn) },
+    get(fn: (entity: T) => T | undefined) { return helpers.get(resource, fn) },
 
-    last(fn: (entity: T) => T | undefined) { return selectors.last(resource, fn) },
+    last(fn: (entity: T) => T | undefined) { return helpers.last(resource, fn) },
 
-    map(fn: (entity: T, index: number) => any) { return selectors.map(resource, fn) },
+    map(fn: (entity: T, index: number) => any) { return helpers.map(resource, fn) },
 
-    not(pred: (entity: T) => T | undefined) { return selectors.not(resource, pred) },
+    not(pred: (entity: T) => T | undefined) { return helpers.not(resource, pred) },
 
-    reduce(fn: (entity: T) => any, init: any) { return selectors.reduce(resource, fn, init) },
+    reduce(fn: (entity: T) => any, init: any) { return helpers.reduce(resource, fn, init) },
 
-    sort(fn: (a: T, b: T) => number) { return selectors.sort(resource, fn) },
+    sort(fn: (a: T, b: T) => number) { return helpers.sort(resource, fn) },
 
-    toArray(){ return selectors.toArray(resource) },
+    toArray(){ return helpers.toArray(resource) },
   }
 }

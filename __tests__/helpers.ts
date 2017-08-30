@@ -9,7 +9,7 @@ import {
   forEach,
   filter,
   first,
-  find,
+  get,
   last,
   map,
   not,
@@ -52,8 +52,8 @@ test('filter entities', () => {
 })
 
 test('reduce entities into a new value', () => {
-  expect(reduce<User>(resource, ((acc: number, u) => acc + parseInt(u.id)), 0)).toEqual(6)
-  })
+  expect(reduce<User>(resource, ((acc: number, u: User) => acc + parseInt(u.id)), 0)).toEqual(6)
+})
 
 test('first - return returns the first entity for its predicate', () => {
   expect(first(resource)).toEqual(users[0])
@@ -65,9 +65,9 @@ test('last - return returns the last entity for its predicate', () => {
   expect(last(resource, u => u.id == "3")).toEqual(users[2])
 })
 
-test('find - get entities with given ids', () => {
-  expect(find(resource, "2")).toEqual(users.slice(1,2))
-  expect(find(resource, ["1", "2"])).toEqual(users.slice(0,2))
+test('get - get entities with given ids', () => {
+  expect(get(resource, "2")).toEqual(users.slice(1,2))
+  expect(get(resource, ["1", "2"])).toEqual(users.slice(0,2))
 })
 
 test('not - get entities without ids', () => {

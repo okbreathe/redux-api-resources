@@ -48,7 +48,7 @@ export function last<T>(resource: Resource<T>, pred: (entity: T) => any = (e) =>
 
 // Retrieves one or more entities
 // This is identical to calling store.[resource].entities[id]
-export function find<T>(resource: Resource<T>, id: any): T[]{
+export function get<T>(resource: Resource<T>, id: any): T[]{
   const ids = Array.isArray(id) ? id : [id]
   const ret: T[] = []
 
@@ -64,7 +64,7 @@ export function find<T>(resource: Resource<T>, id: any): T[]{
 export function not<T>(resource: Resource<T>, id: any): T[]{
   const a = resource.results
   const b = Array.isArray(id) ? id : [id]
-  return find(resource, a.filter(function(x) { return b.indexOf(x) < 0 }))
+  return get(resource, a.filter(function(x) { return b.indexOf(x) < 0 }))
 }
 
 // Sort entities
@@ -76,7 +76,7 @@ export default {
   forEach,
   filter,
   first,
-  find,
+  get,
   last,
   map,
   not,

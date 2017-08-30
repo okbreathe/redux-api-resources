@@ -1,12 +1,4 @@
-import { Action, Status, Resource } from './types'
-
-interface ResourceReducerOptions<T> {
-  idAttribute?: string
-  onUpdate?: (prev: T, next: T) => T
-  changesetReducer?: (form: any, changeset: any) => any
-  entityReducer?: (action: string, payload: any, meta: any) => any
-  errorReducer?: (action: string, payload: any, meta: any) => any
-}
+import { Action, Status, Resource, ResourceReducerOptions } from './types'
 
 export function initialResourceState<T>(): Resource<T> {
   return {
