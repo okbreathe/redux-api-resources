@@ -30,6 +30,7 @@ export default function resourceReducer<T>(resourceName: string, options?: Resou
 
     if (name == actionName) {
       switch (actionDomain) {
+        case 'RESOURCE' : return initialResourceState<T>()
         case 'CHANGESET': return handleChangeset(actionDomain, actionMethod, action, state, options)
         default         : return handleResource(actionDomain, actionMethod, action, state, options)
       }

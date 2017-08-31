@@ -1,10 +1,3 @@
-declare var require: any
-
-interface User {
-  id: string
-  name: string
-}
-
 import {
   forEach,
   filter,
@@ -18,7 +11,9 @@ import {
   toArray,
 } from '../src'
 
-const users: User[] = require('./fixtures/users.json').slice(0,3)
+import usersData, { User } from './fixtures/users'
+
+const users = usersData.slice(0,3)
 
 const resource = {
   results: users.map(u => u.id),

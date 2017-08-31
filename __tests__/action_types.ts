@@ -19,7 +19,8 @@ test('Generates Action Types for a resource', () => {
         destroyStart: 'USERS/DESTROY/START',
       destroySuccess: 'USERS/DESTROY/SUCCESS',
       destroyFailure: 'USERS/DESTROY/FAILURE',
-        destroyClear: 'USERS/DESTROY/CLEAR'
+        destroyClear: 'USERS/DESTROY/CLEAR',
+       resourceReset: 'USERS/RESOURCE/RESET'
   })
 })
 

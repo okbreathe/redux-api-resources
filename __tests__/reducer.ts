@@ -1,14 +1,7 @@
-declare var require: any
-
 import { resourceReducer } from '../src'
 import { initialResourceState } from '../src/reducer'
+import users, { User } from './fixtures/users'
 
-interface User {
-  id: string
-  name: string
-}
-
-const users: User[]   = require('./fixtures/users.json')
 const actionFetch     = "USERS/FETCH/SUCCESS"
 const actionFetchFail = "USERS/FETCH/FAILURE"
 const actionClear     = "USERS/FETCH/CLEAR"
@@ -19,8 +12,6 @@ const changesetSet    = "USERS/CHANGESET/SET"
 const changesetRemove = "USERS/CHANGESET/REMOVE"
 
 const reducer = resourceReducer("users")
-
-// test that id can be number
 
 test('adds multiple items to store', () => {
   const state = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
@@ -43,7 +34,6 @@ test('adds a single item to store', () => {
   expect(state.status.fetch.success).toEqual(true)
 })
 
-// Should be optional alwaysRefresh, takeLatest, takeEvery
 test('does not add an existing item to store', () => {
   const user = users[0]
   const initialState = reducer(initialResourceState<User>(), { payload: user, type: actionFetch })

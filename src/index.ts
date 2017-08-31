@@ -2,11 +2,11 @@ import { bindActionCreators, ActionCreatorsMapObject } from 'redux'
 
 import resourceActionTypes from './action_types'
 import resourceActions from './actions'
-import resourceReducer from './reducer'
+import resourceReducer, { initialResourceState } from './reducer'
 import * as helpers from './helpers'
 import { Action, Resource, ResourceActions, ResourceWithHelpers  } from './types'
 
-export { resourceActionTypes, resourceActions, resourceReducer }
+export { resourceActionTypes, resourceActions, resourceReducer, initialResourceState }
 export * from './types'
 export * from './helpers'
 

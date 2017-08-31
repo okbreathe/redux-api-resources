@@ -29,12 +29,15 @@ export default function resourceActionsTypes(resourceName: string, additionalTyp
   return {
     ...generateActionTypes(resourceName, additionalTypes.concat(RESOURCE_TYPES), RESOURCE_STATES),
     ...generateActionTypes(resourceName, ['changeset'], CHANGESET_TYPES),
+    ...generateActionTypes(resourceName, ['resource'], ['reset']),
   }
 }
 
 function generateActionTypes(resourceName: string, types: string[], states: string[]){
   return types.reduce((acc: any, type) => {
-    states.forEach(state => acc[`${type}${state[0].toUpperCase()}${state.slice(1)}`] = `${resourceName}/${type}/${state}`.toUpperCase())
+    states.forEach(state => {
+      acc[`${type}${state[0].toUpperCase()}${state.slice(1)}`] = `${resourceName}/${type}/${state}`.toUpperCase()
+    })
     return acc
   }, {})
 }
