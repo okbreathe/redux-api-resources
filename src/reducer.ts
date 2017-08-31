@@ -108,7 +108,7 @@ function handleSuccess(crudType: string, action: Action<any>, state: Resource<an
         payload: payload
       }
     },
-    meta: { ...state.meta, ...action.meta },
+    meta: action.meta === null || action.meta === false ? {} : { ...state.meta, ...action.meta },
     changeset: state.changeset
   }
 

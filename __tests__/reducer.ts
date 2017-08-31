@@ -8,6 +8,7 @@ const actionClear     = "USERS/FETCH/CLEAR"
 const actionCreate    = "USERS/CREATE/SUCCESS"
 const actionUpdate    = "USERS/UPDATE/SUCCESS"
 const actionDestroy   = "USERS/DESTROY/SUCCESS"
+const actionReset     = "USERS/RESOURCE/RESET"
 const changesetSet    = "USERS/CHANGESET/SET"
 const changesetRemove = "USERS/CHANGESET/REMOVE"
 
@@ -103,7 +104,29 @@ test("Sets a resource's meta", () => {
   expect(state.meta).toEqual(meta)
 })
 
+test("Reset the meta", () => {
+  const meta = { foo: 'bar' }
+  const actionWithMeta = { payload: [], type: actionFetch, meta: meta }
+  let state
+
+  state = reducer(initialResourceState<User>(), actionWithMeta)
+  state = reducer(state, { payload: [], type: actionFetch, meta: false })
+  expect(state.meta).toEqual({})
+
+  state = reducer(initialResourceState<User>(), actionWithMeta)
+  state = reducer(state, { payload: [], type: actionFetch, meta: null })
+  expect(state.meta).toEqual({})
+
+  state = reducer(initialResourceState<User>(), actionWithMeta)
+  state = reducer(state, { payload: [], type: actionFetch, meta: undefined })
+  expect(state.meta).toEqual(meta)
+})
+
 test("Reset a resource to the inital state", () => {
+  let state = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
+  expect(state).not.toEqual(initialResourceState())
+  state = reducer(state, { payload: null, type: actionReset })
+  expect(state).toEqual(initialResourceState())
 })
 
 test('Creating a changeset', () => {

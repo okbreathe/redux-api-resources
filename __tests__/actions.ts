@@ -22,9 +22,9 @@ test('CRUD action start', () => {
 
 test('CRUD action success', () => {
   const store = mockStore(initialResourceState())
-  const expectedActions = [{ ...defaultAction, type: actionSuccess, payload: users }]
+  const expectedActions = [{ ...defaultAction, type: actionSuccess, payload: users, meta: { page: 1 } }]
 
-  store.dispatch(fetchSuccess(users))
+  store.dispatch(fetchSuccess(users, { page: 1 }))
 
   expect(store.getActions()).toEqual(expectedActions)
 })
