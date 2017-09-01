@@ -1,6 +1,6 @@
 # Redux API Resources
 
-An opinioned library for Redux focused on resource management and reduction of boilerplate.
+An opinionated library for Redux focused on resource management and reduction of boilerplate.
 
 * Generates a common set of action types and action creators based on standard CRUD operations
 * Stateful information about each CRUD operation, e.g. whether a resource is busy, operation resulted in an error etc.
@@ -22,7 +22,6 @@ const reducer = resourceReducer("users", { ...options }),
 
 Having created a resource you can use it in your components:
 
-
 ```javascript
 import { bindActionCreators } from 'redux'
 
@@ -36,22 +35,27 @@ connect(
 )(SomeComponent)
 ```
 
-There are four standard CRUD operations: `fetch` (i.e. `read`), `create`,
+## Actions
+
+Actions are based on the [Redux Standard Action](https://github.com/acdlite/flux-standard-action).
+Every action takes at most _two_ arguments, a `payload` object and a `meta`
+object. Depending on the action, it may or may make use of these arguments.
+
+There are four standard CRUD operations: `fetch` (aka read), `create`,
 `update`, and `destroy`. For each action there are four possible invocations:
 `start`, `success`, `failure` and `clear`. Using the `fetch` operation as an
 example there exists the following actions:
 
 ```javascript
 actions.fetchStart() // => Put the fetch status into a busy state
-actions.fetchFailure(payload, meta) // => Put the fetch status into a failure state and merge the response into the status
-actions.fetchSuccess(payload, meta) // => Put the fetch status into a success state and merge the fetched data into the collection
+actions.fetchFailure(payload, meta) // => Put the fetch status into a failure state and merge the response into the status, merge meta
+actions.fetchSuccess(payload, meta) // => Put the fetch status into a success state and merge the fetched data into the collection, merge meta
 actions.fetchClear() // => Reset the fetch status to the default state
 ```
 
 Typical usage would look something like this:
 
-```java
-
+```javascript
 function fetchUsers() {
   actions.fetchStart()
   try {
@@ -63,17 +67,18 @@ function fetchUsers() {
 }
 ```
 
-In addition to standard CRUD-based actions, there are two actions for working with transient data for
-modifying a resource: `changesetSet` and `changesetRemove`.
+In addition to standard CRUD-based actions, there are two actions for working
+with transient data typically used for modifying a resource: `changesetSet` and
+`changesetRemove`.
 
 ```javascript
-actions.changesetSet({ key: value }, { form: key }) // => Add or replace the key in the changeset with the given value
-actions.changesetRemove([key, key...], { form: key }) // => Remove the following keys from the changeset
-actions.changesetRemove(true, { form: key }) // => Remove ALL the cahnges from the changeset
+actions.changesetSet({ key: value }, { form: 'key' }) // => Add or replace the key in the changeset with the given value
+actions.changesetRemove([key, key...], { form: 'key' }) // => Remove the following keys from the changeset
+actions.changesetRemove(true, { form: 'key' }) // => Remove ALL the cahnges from the changeset
 ```
 
-The second argument is optional. It is used to specify a unique key in the changeset object for the given data.
-If omitted all changes will be placed under a `default` key. For example:
+Here the `meta` argument is optionally used to specify a unique key in the changeset object for the given data.
+If omitted all changes will be placed under a `default` key.
 
 ```javascript
 actions.changesetSet({ foo: 'bar' }, { form: 'myKey' })
@@ -88,12 +93,12 @@ Will result in a changeset object that looks like this:
 ```
 
 Generally it's more convenient to work with the form abstraction than work with
-these actions directly. More on that next.
+these actions directly. More on that in a bit.
 
 Finally there is a reset action for restoring a resource to a pristine state,
-to analagous deleting EVERYTHING `resourceReset()`.
+to analogous deleting EVERYTHING `resourceReset()`.
 
-### Working with Resources
+## Working with Resources
 
 A resource is defined in the store as:
 
@@ -105,7 +110,7 @@ export interface ReduxResource<T> {
   entities: {}
   // Store meta data about the collection (e.g. pagination, sort)
   meta: {}
-  // Temporary writeable state, common use case editing a form
+  // Temporary writeable state, common use case is storing form data
   changeset: {}
   // Result of the last CRUD operation. Typically used to display information
   // to the user about the status of a given operation (e.g. updating a user failed)
@@ -118,11 +123,11 @@ export interface ReduxResource<T> {
 }
 ```
 
-#### Collection Helpers
+### Collection Helpers
 
 As resources are stored both as key/values and an ordered set of ids, working
 with them isn't as straight forward as a simple array of objects. There are a number of
-functions defined for performing commong operations on collections, e.g. `map`, `reduce`,
+functions defined for performing common operations on collections, e.g. `map`, `reduce`,
 `filter` etc.
 
 ```javascript
@@ -143,11 +148,12 @@ wrappedResource.map(r => r)
 
 ### resourceForm
 
-Modifying resources is an extremely common activity, as such there's a helper method that encapsulates
-updating the store in reaction to user input.
+Modifying resources is an extremely common activity. `resourceForm` encapsulates modifying and reading
+the state in response to user input.
+
 
 ```javascript
-const form = actions.resourceForm(uniqueFormKey = 'default')
+const form = actions.resourceForm(formKey = 'default') // formKey here is the same as the formKey mentioned above
 ```
 
 A generated `resourceForm` has six methods:
@@ -169,7 +175,7 @@ A generated `resourceForm` has six methods:
   clear()
 
   // Creates an action dispatcher, detailed below
-  field(name, { /*options*/ })
+  field(name, { /* ...options */ })
 ```
 
 #### Field Action Dispatcher
@@ -181,7 +187,7 @@ input by using the spread operator.
 ```javascript
 <input type="string" {...field("name")} />
 ```
-The following options can also be specified:
+The available options are:
 
 ```javascript
 {
@@ -213,9 +219,9 @@ of options for customizing how data is updated in the store:
 {
   idAttribute: "id",
   onUpdate: (prev, next) => next,
-  changesetReducer: ({ /*changeset*/ }, { /*changes*/ }) => ({ ...changeset, ...changes}),
-  entityReducer: (action, { /*payload*/ }, { /*meta*/ }) => payload,
-  errorReducer: (action, { /*payload*/ }, { /*meta*/ }) => payload,
+  changesetReducer: ( changeset ,  changes ) => ({ ...changeset, ...changes}),
+  entityReducer: (action_type, payload, meta) => payload,
+  errorReducer: (action_type, payload, meta) => payload,
 }
 ```
 * idAttribute - defines which key serves as the object's id, typically "id"

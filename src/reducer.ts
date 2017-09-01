@@ -18,9 +18,9 @@ export default function resourceReducer<T>(resourceName: string, options?: Resou
   options = {
     idAttribute: "id",
     onUpdate: (prev, next) => next,
-    changesetReducer: (form, changeset) => ({ ...form, ...changeset}),
-    entityReducer: (action, payload, meta) => payload,
-    errorReducer: (action, payload, meta) => payload,
+    changesetReducer: (changeset, changes) => ({ ...changeset, ...changes }),
+    entityReducer: (action_type, payload, meta) => payload,
+    errorReducer: (action_type, payload, meta) => payload,
     ...options,
   }
 
