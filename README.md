@@ -43,14 +43,26 @@ object. Depending on the action, it may or may make use of these arguments.
 
 There are four standard CRUD operations: `fetch` (aka read), `create`,
 `update`, and `destroy`. For each action there are four possible invocations:
-`start`, `success`, `failure` and `clear`. Using the `fetch` operation as an
+`start`, `success`, `failure` and `clear`. Each operation stores the state and
+result of the last operation in a status object. Using the `fetch` operation as an
 example there exists the following actions:
 
 ```javascript
-actions.fetchStart() // => Put the fetch status into a busy state
-actions.fetchFailure(payload, meta) // => Put the fetch status into a failure state and merge the response into the status, merge meta
-actions.fetchSuccess(payload, meta) // => Put the fetch status into a success state and merge the fetched data into the collection, merge meta
-actions.fetchClear() // => Reset the fetch status to the default state
+// Put the fetch status into a busy state
+actions.fetchStart()
+
+// Put the fetch status into a success state.
+// Merge the meta data into the existing meta.
+// Payload is assumed to be one or more resource bojects and will be merged into the collection.
+actions.fetchSuccess(payload, meta)
+
+// Put the fetch status into a failure state.
+// Merge the meta data into the existing meta.
+// Payload is assumed to be error data and will be available on fetch status object
+actions.fetchFailure(payload, meta)
+
+// Reset the fetch status to the default state
+actions.fetchClear()
 ```
 
 Typical usage would look something like this:
@@ -72,13 +84,19 @@ with transient data typically used for modifying a resource: `changesetSet` and
 `changesetRemove`.
 
 ```javascript
-actions.changesetSet({ key: value }, { form: 'key' }) // => Add or replace the key in the changeset with the given value
-actions.changesetRemove([key, key...], { form: 'key' }) // => Remove the following keys from the changeset
-actions.changesetRemove(true, { form: 'key' }) // => Remove ALL the cahnges from the changeset
+// Add or replace the key/value pairs in the changeset
+actions.changesetSet({ key: value }, { form: 'key' })
+
+// Remove the following keys from the changeset
+actions.changesetRemove([key, key...], { form: 'key' })
+
+// Remove ALL the changes from the changeset
+actions.changesetRemove(true, { form: 'key' })
 ```
 
-Here the `meta` argument is optionally used to specify a unique key in the changeset object for the given data.
-If omitted all changes will be placed under a `default` key.
+Here the `meta` argument is optionally used to specify a unique key in the
+changeset object for the given data. If omitted all changes will be placed
+under a `default` key.
 
 ```javascript
 actions.changesetSet({ foo: 'bar' }, { form: 'myKey' })
@@ -148,30 +166,36 @@ wrappedResource.map(r => r)
 
 ### resourceForm
 
-Modifying resources is an extremely common activity. `resourceForm` encapsulates modifying and reading
-the state in response to user input.
+Modifying resources is an extremely common activity. `resourceForm`
+encapsulates modifying and reading the state in response to user input.
 
 
 ```javascript
-const form = actions.resourceForm(formKey = 'default') // formKey here is the same as the formKey mentioned above
+const form = actions.resourceForm(formKey = 'default')
 ```
+
+When using the resourceForm helper the supplied formKey here works the same as
+the formKey mentioned above. All function calls implicitly use this to scope
+modification to an object under that key.
 
 A generated `resourceForm` has six methods:
 
 ```javascript
-  // Set the given key values in the changeset
+  // Add or replace the given key/value pairs to the scoped changeset
   set({ key: value })
 
-  // Retrieve the current changeset. Optionally limit the changes to one or more keys to retrieve
+  // Retrieve the current scoped changeset. If called with one or more keys,
+  // it will only return that subset of key/values
   changeset(...keys)
 
-  // Retrieve the errors for a given CRUD operation, where which is one of 'create', 'update', 'fetch', or 'destroy'
+  // Retrieve the errors for a given CRUD operation, which will be one of
+  // 'create', 'update', 'fetch', or 'destroy'
   errors(which)
 
-  // Remove the given keys from the changeset
+  // Remove the given keys from the scoped changeset
   remove(...fields)
 
-  // Remove everything from the changeset
+  // Remove everything from the scoped changeset
   clear()
 
   // Creates an action dispatcher, detailed below
@@ -201,14 +225,14 @@ The available options are:
   eventHandler = (e: any, a: any, b: any, c: any) => e && e.target ? e.target.value : e
 }
 ```
-* storeKey - By default the name of this field will be used as the key in the changeset. You can use a different key in the store by specifying a storeKey
-* valueKey - Which property that will be set when the field changes
-* eventType - The events we're listening to. Can be a string or an array of strings
-* defaultValue - The value used if no value currently exists in the changeset
-* afterEvent - Callback fired immediately after and event is triggered, but before the store is updated
-* normalize - Normalize input for the Redux store. Common use cases are maintaining data as Numbers or Dates in the store, while displaying them differently
-* format - Formats the value in the Redux store to be used in your input component. Used in conjunction with normalize to maintain the correct state and view types
-* eventHandler - Handles all events specified by `eventType` Should return the value for the store
+* `storeKey` - By default the name of this field will be used as the key in the changeset. You can use a different key in the store by specifying a storeKey
+* `valueKey` - Which property that will be set when the field changes
+* `eventType` - The events we're listening to. Can be a string or an array of strings
+* `defaultValue` - The value used if no value currently exists in the changeset
+* `afterEvent` - Callback fired immediately after and event is triggered, but before the store is updated
+* `normalize` - Normalize input for the Redux store. Common use cases are maintaining data as Numbers or Dates in the store, while displaying them differently
+* `format` - Formats the value in the Redux store to be used in your input component. Used in conjunction with normalize to maintain the correct state and view types
+* `eventHandler` - Handles all events specified by `eventType` Should return the value for the store
 
 ### Reducer
 
@@ -224,8 +248,8 @@ of options for customizing how data is updated in the store:
   errorReducer: (action_type, payload, meta) => payload,
 }
 ```
-* idAttribute - defines which key serves as the object's id, typically "id"
-* onUpdate - applied when updating an existing entity in the store
-* changesetReducer - applied when merging changesets
-* entityReducer - applied when merging entities into the store
-* errorReducer - applied when adding errors to an action's status
+* `idAttribute` - defines which key serves as the object's id, typically "id"
+* `onUpdate` - applied when updating an existing entity in the store
+* `changesetReducer` - applied when merging changesets
+* `entityReducer` - applied when merging entities into the store
+* `errorReducer` - applied when adding errors to an action's status
