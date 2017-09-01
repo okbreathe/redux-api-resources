@@ -66,13 +66,13 @@ example there exists the following actions:
 // Put the fetch status into a busy state
 actions.fetchStart()
 
-// Put the fetch status into a success state.
-// Merge the meta data into the existing meta.
-// Payload is assumed to be one or more resource bojects and will be merged into the collection.
+// Put the fetch status into a success state
+// Merge the meta data into the existing meta
+// Payload is assumed to be one or more resource bojects and will be merged into the collection
 actions.fetchSuccess(payload, meta)
 
-// Put the fetch status into a failure state.
-// Merge the meta data into the existing meta.
+// Put the fetch status into a failure state
+// Merge the meta data into the existing meta
 // Payload is assumed to be error data and will be available on fetch status object
 actions.fetchFailure(payload, meta)
 
@@ -240,31 +240,32 @@ The available options are:
   eventHandler = (e: any, a: any, b: any, c: any) => e && e.target ? e.target.value : e
 }
 ```
-* `storeKey` - By default the name of this field will be used as the key in the changeset. You can use a different key in the store by specifying a storeKey
-* `valueKey` - Which property that will be set when the field changes
+* `storeKey` - By default the name of this field will be used as the key in the changeset. Specifying a storeKey will use that key instead
+* `valueKey` - Which property will be set when the field changes
 * `eventType` - The events we're listening to. Can be a string or an array of strings
 * `defaultValue` - The value used if no value currently exists in the changeset
 * `afterEvent` - Callback fired immediately after and event is triggered, but before the store is updated
-* `normalize` - Normalize input for the Redux store. Common use cases are maintaining data as Numbers or Dates in the store, while displaying them differently
-* `format` - Formats the value in the Redux store to be used in your input component. Used in conjunction with normalize to maintain the correct state and view types
-* `eventHandler` - Handles all events specified by `eventType` Should return the value for the store
+* `normalize` - Normalize input for the Redux store. Common use case is maintaining data as one type in your store, and another for presentation
+* `format` - Transforms the value in the Redux store for presentation. Used in conjunction with normalize to maintain the correct state and view types
+* `eventHandler` - Handles all events specified by `eventType`. Should return the value for the store
 
 ### Reducer
 
 When creating a reducer either through `resourceReducer` or `resourceFor`, there are a number
-of options for customizing how data is updated in the store:
+of options for customizing how data is stored in Redux. Typically these are used to transform
+a server response into a more desired shape.
 
 ```javascript
 {
   idAttribute: "id",
-  onUpdate: (prev, next) => next,
-  changesetReducer: ( changeset ,  changes ) => ({ ...changeset, ...changes}),
+  onUpdate: (prevResource, nextResource) => nextResource,
+  changesetReducer: (changeset ,  changes) => ({ ...changeset, ...changes}),
   entityReducer: (action_type, payload, meta) => payload,
   errorReducer: (action_type, payload, meta) => payload,
 }
 ```
 * `idAttribute` - defines which key serves as the object's id, typically "id"
-* `onUpdate` - applied when updating an existing entity in the store
+* `onUpdate` - applied when updating an existing entity in the store.
 * `changesetReducer` - applied when merging changesets
 * `entityReducer` - applied when merging entities into the store
 * `errorReducer` - applied when adding errors to an action's status
