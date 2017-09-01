@@ -169,7 +169,7 @@ A generated `resourceForm` has six methods:
   clear()
 
   // Creates an action dispatcher, detailed below
-  field(name, options: {})
+  field(name, { /*options*/ })
 ```
 
 #### Field Action Dispatcher
@@ -213,9 +213,9 @@ of options for customizing how data is updated in the store:
 {
   idAttribute: "id",
   onUpdate: (prev, next) => next,
-  changesetReducer: (form, changeset) => ({ ...form, ...changeset}),
-  entityReducer: (action, payload, meta) => payload,
-  errorReducer: (action, payload, meta) => payload,
+  changesetReducer: ({ /*changeset*/ }, { /*changes*/ }) => ({ ...changeset, ...changes}),
+  entityReducer: (action, { /*payload*/ }, { /*meta*/ }) => payload,
+  errorReducer: (action, { /*payload*/ }, { /*meta*/ }) => payload,
 }
 ```
 * idAttribute - defines which key serves as the object's id, typically "id"
