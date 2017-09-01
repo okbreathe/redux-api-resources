@@ -97,7 +97,7 @@ to analagous deleting EVERYTHING `resourceReset()`.
 
 A resource is defined in the store as:
 
-```typescript
+```javascript
 export interface ReduxResource<T> {
   // Ordered object ids
   results: []
@@ -125,7 +125,7 @@ with them isn't as straight forward as a simple array of objects. There are a nu
 functions defined for performing commong operations on collections, e.g. `map`, `reduce`,
 `filter` etc.
 
-```typescript
+```javascript
 import { map, reduce, filter } from 'redux-api-resources'
 
 map(myResource, r => r)
@@ -133,7 +133,7 @@ map(myResource, r => r)
 
 You can also wrap a resource so that you can call the methods directly on the resource itself
 
-```typescript
+```javascript
 import { resourceWithHelpers } from 'redux-api-resources'
 
 const wrappedResource = resourceWithHelpers(myResource)
@@ -209,7 +209,7 @@ The following options can also be specified:
 When creating a reducer either through `resourceReducer` or `resourceFor`, there are a number
 of options for customizing how data is updated in the store:
 
-```typescript
+```javascript
 {
   idAttribute: "id",
   onUpdate: (prev, next) => next,
