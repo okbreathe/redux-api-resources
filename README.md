@@ -8,11 +8,14 @@ An opinionated library for Redux focused on resource management and reduction of
 
 ## Setup
 
-```javascript
-// Generate action types, action creators and a reducer for a "users" resource
-const { actions, types, reducer } = resourceFor("users", { ...options })
+*Generate action types, action creators and a reducer for a "users" resource*
 
-// Or à la carte
+```javascript
+const { actions, types, reducer } = resourceFor("users", { ...options })
+```
+*Or à la carte*
+
+```javascript
 const types = resourceActionTypes("users"),
 
 const actions = resourceActions("users"),
@@ -20,7 +23,20 @@ const actions = resourceActions("users"),
 const reducer = resourceReducer("users", { ...options }),
 ```
 
-Having created a resource you can use it in your components:
+*Add the resource reducer to your root reducer:*
+
+
+```javascript
+import { combineReducers } from 'redux'
+import users from '<somewhere>'
+
+const rootReducer = combineReducers({
+  users: users.reducer,
+  // ... more reducers
+})
+```
+
+*After you've created a resource and hooked it into your store you can use it in your components*
 
 ```javascript
 import { bindActionCreators } from 'redux'
