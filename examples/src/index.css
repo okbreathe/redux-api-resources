@@ -1,0 +1,23 @@
+@import '~@blueprintjs/core/dist/blueprint.css';
+
+body {
+  background: #ddd;
+}
+
+#notes {
+  margin: 0 auto;
+  width: 50vw;
+}
+
+form,
+.pt-card {
+  margin-bottom: 1rem;
+}
+
+.pt-card footer {
+  margin-top: 1rem;
+}
+
+.error {
+  color: #d00;
+}
