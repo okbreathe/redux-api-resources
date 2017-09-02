@@ -73,7 +73,7 @@ actions.fetchSuccess(payload, meta)
 
 // Put the fetch status into a failure state
 // Merge the meta data into the existing meta
-// Payload is assumed to be error data and will be available on fetch status object
+// Payload is assumed to be status information (e.g. error) data and will be available on fetch status object
 actions.fetchFailure(payload, meta)
 
 // Reset the fetch status to the default state
@@ -163,7 +163,7 @@ export interface ReduxResource<T> {
 As resources are stored both as key/values and an ordered set of ids, working
 with them isn't as straight forward as a simple array of objects. There are a number of
 functions defined for performing common operations on collections, e.g. `map`, `reduce`,
-`filter` etc.
+`filter` etc (see `src/helpers.ts`).
 
 ```javascript
 import { map, reduce, filter } from 'redux-api-resources'

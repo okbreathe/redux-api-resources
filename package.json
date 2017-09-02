@@ -12,7 +12,7 @@
   },
   "scripts": {
     "prepublish": "yarn run build",
-    "build": "webpack",
+    "build": "rm -rf ./dist && tsc",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watchAll --notify"
@@ -38,7 +38,7 @@
     "dts-webpack-plugin": "^0.0.9",
     "redux": "^3.7.2",
     "ts-loader": "^2.3.2",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5.2"
   },
   "devDependencies": {
     "@types/jest": "^20.0.7",
@@ -54,7 +54,9 @@
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "testPathIgnorePatterns":["fixtures"],
+    "testPathIgnorePatterns": [
+      "fixtures"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
