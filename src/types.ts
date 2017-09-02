@@ -50,22 +50,24 @@ export type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
 export interface ResourceActions<T> {
     changesetSet: ResourceActionCreator<T>
  changesetRemove: ResourceActionCreator<T>
+  changesetReset: ResourceActionCreator<T>
       fetchStart: ResourceActionCreator<T>
     fetchSuccess: ResourceActionCreator<T>
     fetchFailure: ResourceActionCreator<T>
-      fetchClear: ResourceActionCreator<T>
+      fetchReset: ResourceActionCreator<T>
      createStart: ResourceActionCreator<T>
    createSuccess: ResourceActionCreator<T>
    createFailure: ResourceActionCreator<T>
-     createClear: ResourceActionCreator<T>
+     createReset: ResourceActionCreator<T>
      updateStart: ResourceActionCreator<T>
    updateSuccess: ResourceActionCreator<T>
    updateFailure: ResourceActionCreator<T>
-     updateClear: ResourceActionCreator<T>
+     updateReset: ResourceActionCreator<T>
     destroyStart: ResourceActionCreator<T>
   destroySuccess: ResourceActionCreator<T>
   destroyFailure: ResourceActionCreator<T>
-    destroyClear: ResourceActionCreator<T>
+    destroyReset: ResourceActionCreator<T>
+       metaReset: ResourceActionCreator<T>
    resourceReset: ResourceActionCreator<T>
     resourceForm: Function
 }

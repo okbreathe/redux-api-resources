@@ -2,20 +2,22 @@ import { resourceReducer } from '../src'
 import { initialResourceState } from '../src/reducer'
 import users, { User } from './fixtures/users'
 
-const actionFetch     = "USERS/FETCH/SUCCESS"
-const actionFetchFail = "USERS/FETCH/FAILURE"
-const actionClear     = "USERS/FETCH/CLEAR"
-const actionCreate    = "USERS/CREATE/SUCCESS"
-const actionUpdate    = "USERS/UPDATE/SUCCESS"
-const actionDestroy   = "USERS/DESTROY/SUCCESS"
-const actionReset     = "USERS/RESOURCE/RESET"
+const fetchSuccess    = "USERS/FETCH/SUCCESS"
+const fetchFailure    = "USERS/FETCH/FAILURE"
+const fetchReset      = "USERS/FETCH/RESET"
+const createSuccess   = "USERS/CREATE/SUCCESS"
+const updateSuccess   = "USERS/UPDATE/SUCCESS"
+const destroySuccess  = "USERS/DESTROY/SUCCESS"
+const resourceReset   = "USERS/RESOURCE/RESET"
 const changesetSet    = "USERS/CHANGESET/SET"
 const changesetRemove = "USERS/CHANGESET/REMOVE"
+const changesetReset  = "USERS/CHANGESET/RESET"
+const metaReset       = "USERS/META/RESET"
 
 const reducer = resourceReducer("users")
 
 test('adds multiple items to store', () => {
-  const state = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
+  const state = reducer(initialResourceState<User>(), { payload: users, type: fetchSuccess })
 
   expect(state.entities).toEqual(users.reduce((acc: any, u) => { acc[u.id] = u; return acc }, {}))
   expect(state.results).toEqual(users.map((u: any) => u.id))
@@ -26,7 +28,7 @@ test('adds multiple items to store', () => {
 
 test('adds a single item to store', () => {
   const user = users[0]
-  const state = reducer(initialResourceState<User>(), { payload: user, type: actionFetch })
+  const state = reducer(initialResourceState<User>(), { payload: user, type: fetchSuccess })
 
   expect(state.entities).toEqual({ [user.id]: user })
   expect(state.results).toEqual([user.id])
@@ -37,8 +39,8 @@ test('adds a single item to store', () => {
 
 test('does not add an existing item to store', () => {
   const user = users[0]
-  const initialState = reducer(initialResourceState<User>(), { payload: user, type: actionFetch })
-  const state = reducer(initialState, { payload: user, type: actionFetch })
+  const initialState = reducer(initialResourceState<User>(), { payload: user, type: fetchSuccess })
+  const state = reducer(initialState, { payload: user, type: fetchSuccess })
 
   expect(state.entities).toEqual({ [user.id]: user })
   expect(state.results).toEqual([user.id])
@@ -51,8 +53,8 @@ test('adds new items to store', () => {
   const testUsers = users.slice(0,2)
   const user = users[0]
   const payload = users[1]
-  const initialState = reducer(initialResourceState<User>(), { payload: user, type: actionFetch })
-  const state = reducer(initialState, { payload, type: actionCreate })
+  const initialState = reducer(initialResourceState<User>(), { payload: user, type: fetchSuccess })
+  const state = reducer(initialState, { payload, type: createSuccess })
 
   expect(state.entities).toEqual(testUsers.reduce((acc: any, u) => { acc[u.id] = u; return acc }, {}))
   expect(state.results).toEqual(testUsers.map((u: any) => u.id))
@@ -64,8 +66,8 @@ test('adds new items to store', () => {
 test('updates an existing item in the store', () => {
   const user = users[0]
   const payload = { id: user.id, name: "CHANGED", email: "user@example.com" }
-  const initialState = reducer(initialResourceState<User>(), { payload: user, type: actionFetch })
-  const state = reducer(initialState, { payload, type: actionUpdate  })
+  const initialState = reducer(initialResourceState<User>(), { payload: user, type: fetchSuccess })
+  const state = reducer(initialState, { payload, type: updateSuccess  })
 
   expect(state.entities[user.id]).toEqual({ ...user, ...payload })
   expect(state.results[0]).toEqual(user.id)
@@ -76,8 +78,8 @@ test('updates an existing item in the store', () => {
 
 test('remove an item from the store', () => {
   const payload = { id: "1" }
-  const initialState = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
-  const state = reducer(initialState, { payload, type: actionDestroy  })
+  const initialState = reducer(initialResourceState<User>(), { payload: users, type: fetchSuccess })
+  const state = reducer(initialState, { payload, type: destroySuccess  })
 
   expect(state.entities["1"]).toBeUndefined()
   expect(state.results).not.toContain("1")
@@ -88,8 +90,8 @@ test('remove an item from the store', () => {
 
 test('removes multiple items from the store', () => {
   const payload = ["1", "2", "3", "4", "5"]
-  let state = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
-  state = reducer(state, { payload, type: actionDestroy  })
+  let state = reducer(initialResourceState<User>(), { payload: users, type: fetchSuccess })
+  state = reducer(state, { payload, type: destroySuccess  })
 
   expect(state.entities).toEqual({})
   expect(state.results.length).toEqual(0)
@@ -100,32 +102,24 @@ test('removes multiple items from the store', () => {
 
 test("Sets a resource's meta", () => {
   const meta = { foo: 'bar' }
-  const state = reducer(initialResourceState<User>(), { payload: [], type: actionFetch, meta })
+  const state = reducer(initialResourceState<User>(), { payload: [], type: fetchSuccess, meta })
   expect(state.meta).toEqual(meta)
 })
 
-test("Reset the meta", () => {
+test("Reseting the meta", () => {
   const meta = { foo: 'bar' }
-  const actionWithMeta = { payload: [], type: actionFetch, meta: meta }
-  let state
+  const actionWithMeta = { payload: [], type: fetchSuccess, meta: meta }
+  let state = reducer(initialResourceState<User>(), actionWithMeta)
 
-  state = reducer(initialResourceState<User>(), actionWithMeta)
-  state = reducer(state, { payload: [], type: actionFetch, meta: false })
+  state = reducer(state, { payload: {}, meta: {}, type: metaReset })
+
   expect(state.meta).toEqual({})
-
-  state = reducer(initialResourceState<User>(), actionWithMeta)
-  state = reducer(state, { payload: [], type: actionFetch, meta: null })
-  expect(state.meta).toEqual({})
-
-  state = reducer(initialResourceState<User>(), actionWithMeta)
-  state = reducer(state, { payload: [], type: actionFetch, meta: undefined })
-  expect(state.meta).toEqual(meta)
 })
 
 test("Reset a resource to the inital state", () => {
-  let state = reducer(initialResourceState<User>(), { payload: users, type: actionFetch })
+  let state = reducer(initialResourceState<User>(), { payload: users, type: fetchSuccess })
   expect(state).not.toEqual(initialResourceState())
-  state = reducer(state, { payload: null, type: actionReset })
+  state = reducer(state, { payload: null, type: resourceReset })
   expect(state).toEqual(initialResourceState())
 })
 
@@ -146,9 +140,9 @@ test('Updating a changeset', () => {
   expect(state.changeset).toEqual({ default: { foo: 'quux' } })
 })
 
-test('Removing a changeset', () => {
+test('Reseting a changeset', () => {
   let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetSet })
-  state = reducer(state, { payload: {}, type: changesetRemove })
+  state = reducer(state, { payload: {}, type: changesetReset })
   expect(state.changeset).toEqual({ default: {} })
 })
 
@@ -158,15 +152,15 @@ test('Removing a changeset field', () => {
   expect(state.changeset).toEqual({ default: { baz: 'quux' } })
 })
 
-test("Clearing the status", () => {
+test("Reseting the status", () => {
   const error = { error: "Error message" }
-  let state = reducer(initialResourceState<User>(), { payload: error, type: actionFetchFail  })
+  let state = reducer(initialResourceState<User>(), { payload: error, type: fetchFailure  })
   expect(state.status.fetch).toEqual({
     pending: true,
     busy: false,
     success: false,
     payload: error
   })
-  state = reducer(state, { payload: {}, type: actionClear })
+  state = reducer(state, { payload: {}, type: fetchReset })
   expect(state.status.fetch).toEqual({ pending: null, id: null, success: null, payload: null, busy: false })
 })

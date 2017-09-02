@@ -58,7 +58,7 @@ object. Depending on the action, it may or may make use of these arguments.
 
 There are four standard CRUD operations: `fetch` (aka read), `create`,
 `update`, and `destroy`. For each action there are four possible invocations:
-`start`, `success`, `failure` and `clear`. Each operation stores the state and
+`start`, `success`, `failure` and `reset`. Each operation stores the state and
 result of the last operation in a status object. Using the `fetch` operation as an
 example there exists the following actions:
 
@@ -77,9 +77,8 @@ actions.fetchSuccess(payload, meta)
 actions.fetchFailure(payload, meta)
 
 // Reset the fetch status to the default state
-actions.fetchClear()
+actions.fetchReset()
 ```
-
 Typical usage would look something like this:
 
 ```javascript
@@ -87,7 +86,8 @@ function fetchUsers() {
   actions.fetchStart()
   try {
     const users = api.fetchUsers()
-    actions.fetchSuccess(users)
+    // Add users to the collection, set the meta info to `page: 1`
+    actions.fetchSuccess(users, { page: 1 })
   } catch (e) {
     actions.fetchFailure(e.message)
   }
@@ -105,8 +105,8 @@ actions.changesetSet({ key: value }, { form: 'key' })
 // Remove the following keys from the changeset
 actions.changesetRemove([key, key...], { form: 'key' })
 
-// Remove ALL the changes from the changeset
-actions.changesetRemove(true, { form: 'key' })
+// Reset/empty the changeset
+actions.changesetReset(null, { form: 'key' })
 ```
 
 Here the `meta` argument is optionally used to specify a unique key in the
@@ -128,8 +128,10 @@ Will result in a changeset object that looks like this:
 Generally it's more convenient to work with the form abstraction than work with
 these actions directly. More on that in a bit.
 
-Finally there is a reset action for restoring a resource to a pristine state,
-to analogous deleting EVERYTHING `resourceReset()`.
+Finally, similar to resetting a CRUD operation's status, or resetting the changeset, there
+is an action for resetting a resource's meta `metaReset()` and an action for
+resetting the entire resource to a pristine state, to analogous deleting
+EVERYTHING, `resourceReset()`.
 
 ## Working with Resources
 

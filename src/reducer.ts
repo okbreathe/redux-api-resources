@@ -30,7 +30,8 @@ export default function resourceReducer<T>(resourceName: string, options?: Resou
 
     if (name == actionName) {
       switch (actionDomain) {
-        case 'RESOURCE' : return initialResourceState<T>()
+        case 'RESOURCE' : return initialResourceState<T>() // Only invoked for a reset of the entire resource
+        case 'META'     : return { ...state, meta: {} } // Only invoked for a reset of meta
         case 'CHANGESET': return handleChangeset(actionDomain, actionMethod, action, state, options)
         default         : return handleResource(actionDomain, actionMethod, action, state, options)
       }
@@ -46,7 +47,7 @@ function handleResource(domain: string, method: string, action: Action<any>, sta
     case 'START'   : return handleStart(domain, action, newState, options)
     case 'SUCCESS' : return handleSuccess(domain, action, newState, options)
     case 'FAILURE' : return handleFailure(domain, action, newState, options)
-    case 'CLEAR'   : return handleClear(domain, action, newState, options)
+    case 'RESET'   : return handleClear(domain, action, newState, options)
   }
   return state
 }
@@ -62,13 +63,12 @@ function handleChangeset(domain: string, method: string, action: Action<any>, st
       newState.changeset[form] = changesetReducer(state.changeset[form], payload)
       break
     case 'REMOVE':
-      if (Array.isArray(payload)) {
-        payload.forEach((field: string) => {
-          delete newState.changeset[form][field]
-        })
-      } else {
-        newState.changeset[form] = {}
-      }
+      (Array.isArray(payload) ?  payload : [payload]).forEach((field: string) => {
+        delete newState.changeset[form][field]
+      })
+      break
+    case 'RESET':
+      newState.changeset[form] = {}
       break
   }
 

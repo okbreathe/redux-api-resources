@@ -26,8 +26,8 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
         /*
          * Clear changeset
          */
-        clear() {
-          dispatch(actions.changesetRemove(null, { form: key }))
+        reset() {
+          dispatch(actions.changesetReset(null, { form: key }))
         },
 
         /*

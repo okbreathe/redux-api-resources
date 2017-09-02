@@ -8,6 +8,7 @@ const unboundActions = resourceForm()
 const formKey = 'my_key'
 const actionSet = "USERS/CHANGESET/SET"
 const actionRemove = "USERS/CHANGESET/REMOVE"
+const actionReset = "USERS/CHANGESET/RESET"
 
 test('you can modify the changeset key', () => {
   const store = mockStore({})
@@ -53,17 +54,17 @@ test('clears fields', () => {
   expect(store.getActions()).toEqual(expectedActions)
 })
 
-test('clears form', () => {
+test('resets form', () => {
   const store = mockStore({})
   const actions = unboundActions(store.dispatch, store.getState)
   const data = { foo: 1, bar: 2 }
   const expectedActions = [
     { payload: data, type: actionSet, meta: { form: 'default' }, error: false },
-    { payload: null, type: actionRemove, meta: { form: 'default' }, error: false }
+    { payload: null, type: actionReset, meta: { form: 'default' }, error: false }
   ]
 
   actions.set(data)
-  actions.clear()
+  actions.reset()
 
   expect(store.getActions()).toEqual(expectedActions)
 })
