@@ -5,7 +5,6 @@
     "module": "commonjs",
     "strict": true,
     "declaration": true,
-    "declarationDir": "./",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "noImplicitThis": true,

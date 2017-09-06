@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from "redux"
-import { createResource } from '../../../dist'
+import { createResource } from "redux-api-resources"
 import thunkMiddleware from "redux-thunk"
 
 export const notes = createResource("notes")

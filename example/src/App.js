@@ -2,7 +2,7 @@ import React from "react"
 import { bindActionCreators } from "redux"
 import { connect }  from 'react-redux'
 import { notes } from "./store"
-import { toArray } from '../../../dist'
+import { toArray } from 'redux-api-resources'
 
 import api from './api'
 import Error from './components/Error'
