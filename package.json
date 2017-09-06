@@ -11,7 +11,7 @@
     "src": "src"
   },
   "scripts": {
-    "prepublish": "yarn run build",
+    "prepare": "yarn run build",
     "build": "rm -rf ./dist && tsc",
     "test": "jest",
     "test:coverage": "jest --coverage",
