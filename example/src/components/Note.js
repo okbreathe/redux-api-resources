@@ -1,9 +1,9 @@
 import React from "react"
-import { EditableText } from "@blueprintjs/core"
+import { Button, EditableText } from "@blueprintjs/core"
 
 export default (props) => {
   const { errors, form, note: { id, title, content }, onDestroy, onEdit, onCancel, onConfirm } = props
-  const field = form.field, enabled = form.state().id == id
+  const field = form.field, disabled = form.changeset().id != id
   // Because of how Blueprint's EditableText works and because there is only a single
   // shared form instance, we pass in an enabled flag based on whether we're
   // editing the particular note. When a field is disabled the field function
@@ -12,7 +12,7 @@ export default (props) => {
     <div className="pt-card pt-elevation-1">
       <h5>
         <EditableText
-          {...field("title", enabled, { defaultValue: null })}
+          {...field("title", { defaultValue: null, disabled })}
           defaultValue={title}
           onEdit={onEdit}
           onCancel={onCancel}
@@ -21,7 +21,7 @@ export default (props) => {
         {errors.title && <Error text={errors.title} />}
       </h5>
       <EditableText
-        {...field("content", enabled, { defaultValue: null })}
+        {...field("content", { defaultValue: null, disabled })}
         multiline
         onEdit={onEdit}
         onCancel={onCancel}

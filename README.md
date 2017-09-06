@@ -232,6 +232,7 @@ The available options are:
 
 ```javascript
 {
+  disabled = false,
   storeKey = null,
   valueKey = 'value',
   eventType = 'onChange',
@@ -242,6 +243,7 @@ The available options are:
   eventHandler = (e: any, a: any, b: any, c: any) => e && e.target ? e.target.value : e
 }
 ```
+* `disabled` - Don't dispatch events
 * `storeKey` - By default the name of this field will be used as the key in the changeset. Specifying a storeKey will use that key instead
 * `valueKey` - Which property will be set when the field changes
 * `eventType` - The events we're listening to. Can be a string or an array of strings

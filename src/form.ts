@@ -69,6 +69,8 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
          * <input {...field("name", { options })} />
          */
         field(name: string, args: any) {
+          if (args && args.disabled) return {}
+
           let {
             // By default the name of this field will be used as the key in the
             // changeset. You can use a different key in the store by

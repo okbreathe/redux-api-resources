@@ -4,27 +4,43 @@ import { connect }  from 'react-redux'
 import { notes } from "./store"
 import { toArray } from '../../../dist'
 
+import api from './api'
 import Error from './components/Error'
 import Form from './components/Form'
 import Note from './components/Note'
 
 class App extends React.Component {
   componentDidMount() {
+    const { fetchStart, fetchFailure, fetchSuccess } = this.props.actions
     // Grab the existing notes from the server
-    // this.props.actions.fetch()
+    fetchStart()
+    try {
+      api.index().then(data => fetchSuccess(data.body))
+    } catch(e) {
+      fetchFailure(e.message)
+    }
   }
 
   onCreate = () => {
-    const { actions, createForm } = this.props
-    actions.create(createForm.state())
+    const { actions: { createStart, createSuccess }, createForm } = this.props
+    createStart()
+    api.create(createForm.changeset())
+      .then(data => createSuccess(data.body) && createForm.reset())
   }
 
   onUpdate = () => {
-    const { actions, updateForm } = this.props
-    actions.update(updateForm.state())
+    const { actions: { updateStart, updateSuccess }, updateForm } = this.props
+    updateStart()
+    api.update(updateForm.changeset().id, updateForm.changeset())
+      .then(data => updateSuccess(data.body) && updateForm.reset())
   }
 
-  onDestroy = (id) => this.props.actions.destroy({ id })
+  onDestroy = (id) => {
+    const { destroyStart, destroySuccess } = this.props.actions
+    destroyStart()
+    api.destroy(id)
+      .then(data => destroySuccess(id))
+  }
 
   render(){
     const { notes, createForm, updateForm } = this.props
@@ -40,7 +56,7 @@ class App extends React.Component {
            errors={updateForm.errors('update')}
            onConfirm={this.onUpdate}
            onDestroy={this.onDestroy}
-           onEdit={() => updateForm.init(note)}
+           onEdit={() => updateForm.set(note)}
            onCancel={updateForm.clear}
            />)}
      </div>

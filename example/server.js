@@ -38,7 +38,7 @@ app.get('/notes', function (req, res) {
 
 app.post('/notes', function (req, res) {
   const errors = hasErrors(req.body)
-  if (errors)  return handleError(res, errors)
+  if (errors) return handleError(res, errors)
 
   const note = req.body
   note.id = notes.length + 1
@@ -50,11 +50,13 @@ app.post('/notes', function (req, res) {
 
 app.put('/notes/:id', function (req, res) {
   const errors = hasErrors(req.body)
-  if (errors)  return handleError(res, errors)
+  if (errors) return handleError(res, errors)
 
-  const idx = notes.indexOf(req.params.id)
-  const note = Object.assign({}, notes[idx], req.body)
-  notes[idx] = note
+  const id = parseInt(req.params.id)
+  const existing = notes.find(n => n.id == id)
+  const note = { ...existing, ...req.body }
+
+  notes.splice(notes.indexOf(note), 1, note)
   res.json(note)
 
   console.info('==> Updated note: {id: %s, title: %s, content: %s}', note.id, note.title, note.content)
