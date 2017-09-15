@@ -1,6 +1,6 @@
 import { ActionCreatorsMapObject } from 'redux'
 
-import { ResourceActions, Resource } from './types'
+import { FieldData, FieldOptions, ResourceActions, Resource } from './types'
 
 const defaultFormKey = 'default'
 const crudActions = ['fetch','create','update','destroy']
@@ -68,7 +68,7 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
          * Use the field generator on a component
          * <input {...field("name", { options })} />
          */
-        field(name: string, args: any) {
+        field(name: string, args: FieldOptions) {
           if (args && args.disabled) return {}
 
           let {
@@ -84,11 +84,11 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
             defaultValue = "",
             // Callback fired immediately after and event is triggered, but
             // before the store is updated
-            afterEvent = (value: any, fieldData: any) => undefined,
+            afterEvent = (value: any, fieldData: FieldData) => undefined,
             // Normalize input for the Redux store. Common use cases are
             // maintaining data as Numbers or Dates in the store, while
             // displaying them differently
-            normalize = (value: any, fieldData: any) => value,
+            normalize = (value: any, fieldData: FieldData) => value,
             // Formats the value in the Redux store to be used in your input
             // component. Used in conjunction with normalize to maintain the
             // correct state and view types

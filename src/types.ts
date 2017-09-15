@@ -84,3 +84,24 @@ export interface ResourceWithHelpers<T> extends Resource<T> {
   sort: (fn: (a: T, b: T) => number) => T[]
   toArray: () => T[]
 }
+
+export interface FieldOptions {
+  storeKey?: string
+  disabled?: boolean
+  valueKey: string
+  eventType: string | string[]
+  defaultValue: any
+  afterEvent: (value: any, fieldData: any) => void
+  normalize: (value: any, fieldData: any) => any
+  format: (value: any, name: string) => any
+  eventHandler: (e: any, a: any, b: any, c: any) => any
+}
+
+export interface FieldData  {
+  field: string
+  name: string
+  storeKey?: string | null
+  value: any
+  eventType: string
+  previousValue: any
+}

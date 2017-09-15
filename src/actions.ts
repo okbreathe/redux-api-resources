@@ -1,5 +1,5 @@
 import resourceActionTypes from './action_types'
-import { ResourceActions } from './types'
+import { Action, ResourceActions } from './types'
 import form from './form'
 
 /**
@@ -21,6 +21,6 @@ export default function resourceActions<T>(resourceName: string): ResourceAction
   return actions
 }
 
-function createAction(type: string) {
-  return (payload?: any, meta?: any) => ({ type, payload, meta, error: type.substr(-7) === "FAILURE" })
+function createAction<T>(type: string): (payload: T, meta?: any) => Action<T> {
+  return (payload: T, meta?: any) => ({ type, payload, meta, error: type.substr(-7) === "FAILURE" })
 }

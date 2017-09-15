@@ -243,7 +243,7 @@ The available options are:
   eventHandler = (e, a, b, c) => e && e.target ? e.target.value : e
 }
 ```
-* `disabled` - Don't dispatch events
+* `disabled` - Disable this field. Store will not be updated
 * `storeKey` - By default the name of this field will be used as the key in the changeset. Specifying a storeKey will use that key instead
 * `valueKey` - Which property will be set when the field changes
 * `eventType` - The events we're listening to. Can be a string or an array of strings
@@ -251,7 +251,9 @@ The available options are:
 * `afterEvent` - Callback fired immediately after and event is triggered, but before the store is updated
 * `normalize` - Normalize input for the Redux store. Common use case is maintaining data as one type in your store, and another for presentation
 * `format` - Transforms the value in the Redux store for presentation. Used in conjunction with normalize to maintain the correct state and view types
-* `eventHandler` - Handles all events specified by `eventType`. Should return the value for the store
+* `eventHandler` - Handles all events specified by `eventType`. Should return
+  the value for the store. To maximize compatibility with arbitrary user
+  widgets
 
 ### Reducer
 
