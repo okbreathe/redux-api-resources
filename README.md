@@ -240,7 +240,7 @@ The available options are:
   afterEvent = (value, fieldData) => undefined,
   normalize = (value, fieldData) => value,
   format = (value, name) => value,
-  eventHandler = (e: any, a: any, b: any, c: any) => e && e.target ? e.target.value : e
+  eventHandler = (e, a, b, c) => e && e.target ? e.target.value : e
 }
 ```
 * `disabled` - Don't dispatch events
