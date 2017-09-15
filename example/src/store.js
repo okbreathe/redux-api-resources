@@ -8,4 +8,3 @@ export default createStore(
   combineReducers({ notes: notes.reducer }),
   applyMiddleware(thunkMiddleware)
 )
-

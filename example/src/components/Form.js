@@ -1,8 +1,11 @@
 import React from "react"
 import { Button } from "@blueprintjs/core"
 
+import Error from './Error'
+
 export default (props) => {
   const { field, errors, onSubmit } = props
+
   return (
     <form>
       <label className="pt-label">

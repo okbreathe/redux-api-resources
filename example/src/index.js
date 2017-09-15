@@ -6,8 +6,6 @@ import store from "./store"
 import App from './App'
 import './index.css'
 
-const Root = <Provider store={store}><App /></Provider>
-
-ReactDOM.render(Root, document.querySelector('#app'))
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.querySelector('#app'))
 
 if (module.hot) module.hot.accept()

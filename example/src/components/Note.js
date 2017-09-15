@@ -1,13 +1,15 @@
 import React from "react"
 import { Button, EditableText } from "@blueprintjs/core"
 
+import Error from './Error'
+
 export default (props) => {
   const { errors, form, note: { id, title, content }, onDestroy, onEdit, onCancel, onConfirm } = props
   const field = form.field, disabled = form.changeset().id != id
-  // Because of how Blueprint's EditableText works and because there is only a single
-  // shared form instance, we pass in an enabled flag based on whether we're
-  // editing the particular note. When a field is disabled the field function
-  // just returns an empty object.
+  // Because of how Blueprint's EditableText works and because there is only a
+  // single shared form instance, we pass in an disabled flag based on whether
+  // we're editing the particular note. When a field is disabled the field
+  // function just returns an empty object.
   return (
     <div className="pt-card pt-elevation-1">
       <h5>
@@ -18,7 +20,7 @@ export default (props) => {
           onCancel={onCancel}
           onConfirm={onConfirm}
           />
-        {errors.title && <Error text={errors.title} />}
+        {(!disabled && errors.title) && <Error text={errors.title} />}
       </h5>
       <EditableText
         {...field("content", { defaultValue: null, disabled })}
@@ -29,12 +31,10 @@ export default (props) => {
         confirmOnEnterKey={true}
         defaultValue={content}
         />
-      {errors.content && <Error text={errors.content} />}
+      {(!disabled && errors.content) && <Error text={errors.content} />}
       <footer>
         <Button iconName="trash" onClick={() => onDestroy(id)} />
       </footer>
     </div>
   )
 }
-
-

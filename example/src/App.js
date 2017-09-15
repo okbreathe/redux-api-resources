@@ -11,32 +11,38 @@ import Note from './components/Note'
 
 class App extends React.Component {
   componentDidMount() {
+    this.fetchNotes()
+  }
+
+  fetchNotes = () => {
     const { fetchStart, fetchFailure, fetchSuccess } = this.props.actions
-    // Grab the existing notes from the server
+
     fetchStart()
-    try {
-      api.index().then(data => fetchSuccess(data.body))
-    } catch(e) {
-      fetchFailure(e.message)
-    }
+    api.index()
+      .end((err, resp) => err ? fetchFailure(resp.body) : fetchSuccess(resp.body))
   }
 
   onCreate = () => {
-    const { actions: { createStart, createSuccess }, createForm } = this.props
+    const { actions: { createStart, createSuccess, createFailure }, createForm } = this.props
+
     createStart()
     api.create(createForm.changeset())
-      .then(data => createSuccess(data.body) && createForm.reset())
+      .end((err, resp) =>
+        err ? createFailure(resp.body) : createSuccess(resp.body) && createForm.reset())
   }
 
   onUpdate = () => {
-    const { actions: { updateStart, updateSuccess }, updateForm } = this.props
+    const { actions: { updateStart, updateSuccess, updateFailure }, updateForm } = this.props
+
     updateStart()
     api.update(updateForm.changeset().id, updateForm.changeset())
-      .then(data => updateSuccess(data.body) && updateForm.reset())
+      .end((err, resp) =>
+        err ? updateFailure(resp.body) : updateSuccess(resp.body) && updateForm.reset())
   }
 
   onDestroy = (id) => {
     const { destroyStart, destroySuccess } = this.props.actions
+
     destroyStart()
     api.destroy(id)
       .then(data => destroySuccess(id))
