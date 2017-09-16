@@ -48,28 +48,29 @@ export interface ResourceReducerOptions<T> {
 export type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
 
 export interface ResourceActions<T> {
-    changesetSet: ResourceActionCreator<T>
- changesetRemove: ResourceActionCreator<T>
-  changesetReset: ResourceActionCreator<T>
-      fetchStart: ResourceActionCreator<T>
-    fetchSuccess: ResourceActionCreator<T>
-    fetchFailure: ResourceActionCreator<T>
-      fetchReset: ResourceActionCreator<T>
-     createStart: ResourceActionCreator<T>
-   createSuccess: ResourceActionCreator<T>
-   createFailure: ResourceActionCreator<T>
-     createReset: ResourceActionCreator<T>
-     updateStart: ResourceActionCreator<T>
-   updateSuccess: ResourceActionCreator<T>
-   updateFailure: ResourceActionCreator<T>
-     updateReset: ResourceActionCreator<T>
-    destroyStart: ResourceActionCreator<T>
-  destroySuccess: ResourceActionCreator<T>
-  destroyFailure: ResourceActionCreator<T>
-    destroyReset: ResourceActionCreator<T>
-       metaReset: ResourceActionCreator<T>
-   resourceReset: ResourceActionCreator<T>
-    resourceForm: Function
+      changesetSet: ResourceActionCreator<T>
+   changesetRemove: ResourceActionCreator<T>
+    changesetReset: ResourceActionCreator<T>
+        fetchStart: ResourceActionCreator<T>
+      fetchSuccess: ResourceActionCreator<T>
+      fetchFailure: ResourceActionCreator<T>
+        fetchReset: ResourceActionCreator<T>
+       createStart: ResourceActionCreator<T>
+     createSuccess: ResourceActionCreator<T>
+     createFailure: ResourceActionCreator<T>
+       createReset: ResourceActionCreator<T>
+       updateStart: ResourceActionCreator<T>
+     updateSuccess: ResourceActionCreator<T>
+     updateFailure: ResourceActionCreator<T>
+       updateReset: ResourceActionCreator<T>
+      destroyStart: ResourceActionCreator<T>
+    destroySuccess: ResourceActionCreator<T>
+    destroyFailure: ResourceActionCreator<T>
+      destroyReset: ResourceActionCreator<T>
+         metaReset: ResourceActionCreator<T>
+     resourceReset: ResourceActionCreator<T>
+      resourceForm: (key?: string) => (dispatch: Function, getState: () => any) => FieldHelper
+[propName: string]: any
 }
 
 export interface ResourceWithHelpers<T> extends Resource<T> {
@@ -85,6 +86,15 @@ export interface ResourceWithHelpers<T> extends Resource<T> {
   toArray: () => T[]
 }
 
+export interface FieldHelper {
+  set: (changes: { [key: string]: any }) => void
+  remove: (...fields: string[]) => void
+  reset: () => void
+  errors: (action: string, fieldKey?: string) => any
+  changeset: (...fields: string[]) => any
+  field: (name: string, args?: FieldOptions) => { name: string, [propName: string]: any }
+}
+
 export interface FieldOptions {
   storeKey?: string
   disabled?: boolean
@@ -94,7 +104,7 @@ export interface FieldOptions {
   afterEvent: (value: any, fieldData: any) => void
   normalize: (value: any, fieldData: any) => any
   format: (value: any, name: string) => any
-  eventHandler: (e: any, a: any, b: any, c: any) => any
+  eventHandler: (...args: any[]) => any
 }
 
 export interface FieldData  {

@@ -97,6 +97,13 @@ test('form helper generates a field change action creator', () => {
   )
 })
 
+test("field change action creator attempts to get the event's target value by default", () => {
+  const store = mockStore({ users: { changeset: {} } })
+  const actions = unboundActions(store.dispatch, store.getState)
+  const expectedAction = {"error": false, "meta": {"form": "default"}, "payload": {"name": "foo"}, "type": "USERS/CHANGESET/SET"}
+  expect(actions.field("name").onChange({ target: { value: 'foo' } })).toEqual(expectedAction)
+})
+
 test('field change action creator can change fields', () => {
   const store = mockStore({ users: { changeset: {} } })
   const actions = unboundActions(store.dispatch, store.getState)

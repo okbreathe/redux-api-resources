@@ -4,7 +4,7 @@ import resourceActionTypes from './action_types'
 import resourceActions from './actions'
 import resourceReducer, { initialResourceState } from './reducer'
 import * as helpers from './helpers'
-import { Action, Resource, ResourceActions, ResourceWithHelpers  } from './types'
+import { Action, Resource, ResourceActions, ResourceWithHelpers, ResourceReducerOptions } from './types'
 
 export { resourceActionTypes, resourceActions, resourceReducer, initialResourceState }
 export * from './types'
@@ -14,11 +14,11 @@ export * from './helpers'
  * Generate a resource in the redux store
  * const resource = createResource<MyModel>("models");
  */
-export function createResource<T>(resourceName: string){
+export function createResource<T>(resourceName: string, options?: ResourceReducerOptions<T>){
   return {
     types:   resourceActionTypes(resourceName),
     actions: resourceActions(resourceName),
-    reducer: resourceReducer<T>(resourceName),
+    reducer: resourceReducer<T>(resourceName, options),
   }
 }
 

@@ -68,7 +68,7 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
          * Use the field generator on a component
          * <input {...field("name", { options })} />
          */
-        field(name: string, args: FieldOptions) {
+        field(name: string, args?: FieldOptions) {
           if (args && args.disabled) return {}
 
           let {
@@ -95,7 +95,10 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
             format = (value: any, name: string) => value,
             // Handles all events specified by `eventType` Should return the
             // value for the store
-            eventHandler = (e: any, a: any, b: any, c: any) => e && e.target ? e.target.value : e
+            eventHandler = (...args: any[]) => {
+              const event = args[0]
+              return event && event.target ? event.target.value : event
+            }
           } = (args || {})
           const field = storeKey || name
           const form = getState()[resourceName].changeset[key] || {}
@@ -107,12 +110,12 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
             return ret
           }
           const ret = {
-            name: name,
+            name,
             [valueKey]: format(val === undefined || val === null ? defaultValue : val, name),
           }
           const eventTypes = Array.isArray(eventType) ? eventType : [eventType]
 
-          eventTypes.forEach((str: string) => ret[str] = (e: any, a: any, b: any, c: any) => handler(eventHandler(e,a,b,c), str))
+          eventTypes.forEach((str: string) => ret[str] = (...args: any[]) => handler(eventHandler(...args), str))
 
           return ret
         }

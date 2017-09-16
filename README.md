@@ -11,14 +11,14 @@ An opinionated library for Redux focused on resource management and reduction of
 **Generate action types, action creators and a reducer for a "users" resource**
 
 ```javascript
-const { actions, types, reducer } = createResource("users", { ...options })
+const { actions, types, reducer } = createResource("users", { ...reducerOptions })
 ```
 **Or à la carte**
 
 ```javascript
 const types = resourceActionTypes("users"),
 const actions = resourceActions("users"),
-const reducer = resourceReducer("users", { ...options }),
+const reducer = resourceReducer("users", { ...reducerOptions }),
 ```
 
 **Add the resource reducer to your root reducer**
@@ -240,7 +240,10 @@ The available options are:
   afterEvent = (value, fieldData) => undefined,
   normalize = (value, fieldData) => value,
   format = (value, name) => value,
-  eventHandler = (e, a, b, c) => e && e.target ? e.target.value : e
+  eventHandler = (...args: any[]) => {
+    const event = args[0]
+    return event && event.target ? event.target.value : event
+  }
 }
 ```
 * `disabled` - Disable this field. Store will not be updated
@@ -251,14 +254,13 @@ The available options are:
 * `afterEvent` - Callback fired immediately after and event is triggered, but before the store is updated
 * `normalize` - Normalize input for the Redux store. Common use case is maintaining data as one type in your store, and another for presentation
 * `format` - Transforms the value in the Redux store for presentation. Used in conjunction with normalize to maintain the correct state and view types
-* `eventHandler` - Handles all events specified by `eventType`. Should return
-  the value for the store. To maximize compatibility with arbitrary user
-  widgets
+* `eventHandler` - Handles all events specified by `eventType`. Should return the value for the store.
+  To maximize compatibility with arbitrary widgets the event handler passes all arguments to the handler
 
 ### Reducer
 
-When creating a reducer either through `resourceReducer` or `resourceFor`, there are a number
-of options for customizing how data is stored in Redux. Typically these are used to transform
+When creating a reducer either through `resourceReducer` or `createResource`, there are a number
+of options to customize how data is stored in Redux. Typically these are used to transform
 a server response into a more desired shape.
 
 ```javascript
