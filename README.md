@@ -11,7 +11,7 @@ An opinionated library for Redux focused on resource management and reduction of
 **Generate action types, action creators and a reducer for a "users" resource**
 
 ```javascript
-const { actions, types, reducer } = resourceFor("users", { ...options })
+const { actions, types, reducer } = createResource("users", { ...options })
 ```
 **Or à la carte**
 
