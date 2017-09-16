@@ -69,7 +69,7 @@ export interface ResourceActions<T> {
       destroyReset: ResourceActionCreator<T>
          metaReset: ResourceActionCreator<T>
      resourceReset: ResourceActionCreator<T>
-      resourceForm: (key?: string) => (dispatch: Function, getState: () => any) => FieldHelper
+      resourceForm: (key?: string) => (dispatch: Function, getState: () => any) => FormHelper
 [propName: string]: any
 }
 
@@ -86,25 +86,27 @@ export interface ResourceWithHelpers<T> extends Resource<T> {
   toArray: () => T[]
 }
 
-export interface FieldHelper {
+export interface FormHelper {
   set: (changes: { [key: string]: any }) => void
   remove: (...fields: string[]) => void
   reset: () => void
   errors: (action: string, fieldKey?: string) => any
   changeset: (...fields: string[]) => any
-  field: (name: string, args?: FieldOptions) => { name: string, [propName: string]: any }
+  field: FieldHelper
 }
+
+export type FieldHelper = (name: string, args?: FieldOptions) => { name: string, [propName: string]: any }
 
 export interface FieldOptions {
   storeKey?: string
   disabled?: boolean
-  valueKey: string
-  eventType: string | string[]
-  defaultValue: any
-  afterEvent: (value: any, fieldData: any) => void
-  normalize: (value: any, fieldData: any) => any
-  format: (value: any, name: string) => any
-  eventHandler: (...args: any[]) => any
+  valueKey?: string
+  eventType?: string | string[]
+  defaultValue?: any
+  afterEvent?: (value: any, fieldData: any) => void
+  normalize?: (value: any, fieldData: any) => any
+  format?: (value: any, name: string) => any
+  eventHandler?: (...args: any[]) => any
 }
 
 export interface FieldData  {

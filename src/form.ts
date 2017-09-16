@@ -1,4 +1,4 @@
-import { ActionCreatorsMapObject } from 'redux'
+import { ActionCreatorsMapObject, Dispatch } from 'redux'
 
 import { FieldData, FieldOptions, ResourceActions, Resource } from './types'
 
@@ -7,7 +7,7 @@ const crudActions = ['fetch','create','update','destroy']
 
 export default function<T>(resourceName: string, actions: ResourceActions<T>) {
   return function(key = defaultFormKey) {
-    return (dispatch: Function, getState: () => any) => {
+    return (dispatch: Dispatch<any>, getState: () => any) => {
       return {
         /*
          * Add or replace given fields given fields
