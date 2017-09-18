@@ -4,7 +4,7 @@ import resourceActionTypes from './action_types'
 import resourceActions from './actions'
 import resourceReducer, { initialResourceState } from './reducer'
 import * as helpers from './helpers'
-import { Action, Resource, ResourceActions, ResourceWithHelpers, ResourceReducerOptions } from './types'
+import { Action, Resource, ResourceActionTypes, ResourceActions, ResourceWithHelpers, ResourceReducerOptions } from './types'
 
 export { resourceActionTypes, resourceActions, resourceReducer, initialResourceState }
 export * from './types'
@@ -16,8 +16,8 @@ export * from './helpers'
  */
 export function createResource<T>(resourceName: string, options?: ResourceReducerOptions<T>){
   return {
-    types:   resourceActionTypes(resourceName),
-    actions: resourceActions(resourceName),
+    types:   resourceActionTypes<T>(resourceName),
+    actions: resourceActions<T>(resourceName),
     reducer: resourceReducer<T>(resourceName, options),
   }
 }

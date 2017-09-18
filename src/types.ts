@@ -1,3 +1,5 @@
+import { ActionCreator } from 'redux'
+
 export type Entity = any
 
 export type Id = string | number
@@ -48,29 +50,54 @@ export interface ResourceReducerOptions<T> {
 export type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
 
 export interface ResourceActions<T> {
-      changesetSet: ResourceActionCreator<T>
-   changesetRemove: ResourceActionCreator<T>
-    changesetReset: ResourceActionCreator<T>
-        fetchStart: ResourceActionCreator<T>
-      fetchSuccess: ResourceActionCreator<T>
-      fetchFailure: ResourceActionCreator<T>
-        fetchReset: ResourceActionCreator<T>
-       createStart: ResourceActionCreator<T>
-     createSuccess: ResourceActionCreator<T>
-     createFailure: ResourceActionCreator<T>
-       createReset: ResourceActionCreator<T>
-       updateStart: ResourceActionCreator<T>
-     updateSuccess: ResourceActionCreator<T>
-     updateFailure: ResourceActionCreator<T>
-       updateReset: ResourceActionCreator<T>
-      destroyStart: ResourceActionCreator<T>
-    destroySuccess: ResourceActionCreator<T>
-    destroyFailure: ResourceActionCreator<T>
-      destroyReset: ResourceActionCreator<T>
-         metaReset: ResourceActionCreator<T>
-     resourceReset: ResourceActionCreator<T>
-      resourceForm: (key?: string) => (dispatch: Function, getState: () => any) => FormHelper
-[propName: string]: any
+    changesetSet: ResourceActionCreator<T>
+ changesetRemove: ResourceActionCreator<T>
+  changesetReset: ResourceActionCreator<T>
+      fetchStart: ResourceActionCreator<T>
+    fetchSuccess: ResourceActionCreator<T>
+    fetchFailure: ResourceActionCreator<T>
+      fetchReset: ResourceActionCreator<T>
+     createStart: ResourceActionCreator<T>
+   createSuccess: ResourceActionCreator<T>
+   createFailure: ResourceActionCreator<T>
+     createReset: ResourceActionCreator<T>
+     updateStart: ResourceActionCreator<T>
+   updateSuccess: ResourceActionCreator<T>
+   updateFailure: ResourceActionCreator<T>
+     updateReset: ResourceActionCreator<T>
+    destroyStart: ResourceActionCreator<T>
+  destroySuccess: ResourceActionCreator<T>
+  destroyFailure: ResourceActionCreator<T>
+    destroyReset: ResourceActionCreator<T>
+       metaReset: ResourceActionCreator<T>
+   resourceReset: ResourceActionCreator<T>
+    resourceForm: (key?: string) => (dispatch: Function, getState: () => any) => FormHelper
+   [key: string]: ActionCreator<any>
+}
+
+export interface ResourceActionTypes<T> {
+    changesetSet: string
+ changesetRemove: string
+  changesetReset: string
+      fetchStart: string
+    fetchSuccess: string
+    fetchFailure: string
+      fetchReset: string
+     createStart: string
+   createSuccess: string
+   createFailure: string
+     createReset: string
+     updateStart: string
+   updateSuccess: string
+   updateFailure: string
+     updateReset: string
+    destroyStart: string
+  destroySuccess: string
+  destroyFailure: string
+    destroyReset: string
+       metaReset: string
+   resourceReset: string
+   [key: string]: string
 }
 
 export interface ResourceWithHelpers<T> extends Resource<T> {

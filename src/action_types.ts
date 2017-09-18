@@ -1,3 +1,5 @@
+import { ResourceActionTypes } from './types'
+
 const RESOURCE_TYPES = [
   'fetch',
   'create',
@@ -24,11 +26,10 @@ const CHANGESET_TYPES = [
  * - action types corresponding to standard REST-based actions
  * - action types for modifying resources
  */
-export default function resourceActionsTypes(resourceName: string, additionalTypes: string[] = []){
+export default function resourceActionsTypes<T>(resourceName: string): ResourceActionTypes<T> {
   if (!resourceName) throw new Error('Expected resource name')
 
   return {
-    ...generateActionTypes(resourceName, additionalTypes.concat(RESOURCE_TYPES), RESOURCE_STATES),
     ...generateActionTypes(resourceName, ['changeset'], CHANGESET_TYPES),
     ...generateActionTypes(resourceName, ['resource'], ['reset']),
     ...generateActionTypes(resourceName, ['meta'], ['reset']),
