@@ -1,6 +1,6 @@
 # Redux API Resources
 
-An opinionated library for Redux focused on resource management and reduction of boilerplate.
+A type-safe, opinionated library for Redux focused on resource management and reduction of boilerplate.
 
 * Generates a common set of action types and action creators based on standard CRUD operations
 * Stateful information about each CRUD operation, e.g. whether a resource is busy, operation resulted in an error etc.
