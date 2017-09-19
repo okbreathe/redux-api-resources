@@ -2,7 +2,7 @@ import { resourceActionTypes } from '../src'
 
 test('Generates Action Types for a resource', () => {
   expect(resourceActionTypes("users")).toEqual({
-        changesetSet: 'USERS/CHANGESET/SET',
+      changesetMerge: 'USERS/CHANGESET/MERGE',
      changesetRemove: 'USERS/CHANGESET/REMOVE',
       changesetReset: 'USERS/CHANGESET/RESET',
           fetchStart: 'USERS/FETCH/START',
@@ -24,11 +24,4 @@ test('Generates Action Types for a resource', () => {
        resourceReset: 'USERS/RESOURCE/RESET',
            metaReset: 'USERS/META/RESET',
   })
-})
-
-test('Generates Non-Standard Action Types', () => {
-  const types = resourceActionTypes("users", ['other'])
-  expect(types.otherStart).toEqual("USERS/OTHER/START")
-  expect(types.otherSuccess).toEqual("USERS/OTHER/SUCCESS")
-  expect(types.otherFailure).toEqual("USERS/OTHER/FAILURE")
 })

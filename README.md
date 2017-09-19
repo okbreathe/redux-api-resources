@@ -95,12 +95,12 @@ function fetchUsers() {
 ```
 
 In addition to standard CRUD-based actions, there are two actions for working
-with transient data typically used for modifying a resource: `changesetSet` and
+with transient data typically used for modifying a resource: `changesetMerge` and
 `changesetRemove`.
 
 ```javascript
 // Add or replace the key/value pairs in the changeset
-actions.changesetSet({ key: value }, { form: 'key' })
+actions.changesetMerge({ key: value }, { form: 'key' })
 
 // Remove the following keys from the changeset
 actions.changesetRemove([key, key...], { form: 'key' })
@@ -114,9 +114,9 @@ changeset object for the given data. If omitted all changes will be placed
 under a `default` key.
 
 ```javascript
-actions.changesetSet({ foo: 'bar' }, { form: 'myKey' })
-actions.changesetSet({ bar: 'baz' }, { form: 'otherKey' })
-actions.changesetSet({ baz: 'quux' })
+actions.changesetMerge({ foo: 'bar' }, { form: 'myKey' })
+actions.changesetMerge({ bar: 'baz' }, { form: 'otherKey' })
+actions.changesetMerge({ baz: 'quux' })
 ```
 
 Will result in a changeset object that looks like this:
@@ -199,7 +199,13 @@ A generated `resourceForm` has six methods:
 
 ```javascript
   // Add or replace the given key/value pairs to the scoped changeset
-  set({ key: value })
+  merge({ key: value })
+
+  // Remove the given keys from the scoped changeset
+  remove(...fields)
+
+  // Remove everything from the scoped changeset
+  clear()
 
   // Retrieve the current scoped changeset. If called with one or more keys,
   // it will only return that subset of key/values
@@ -208,12 +214,6 @@ A generated `resourceForm` has six methods:
   // Retrieve the errors for a given CRUD operation, which will be one of
   // 'create', 'update', 'fetch', or 'destroy'
   errors(which)
-
-  // Remove the given keys from the scoped changeset
-  remove(...fields)
-
-  // Remove everything from the scoped changeset
-  clear()
 
   // Creates an action dispatcher, detailed below
   field(name, { /* ...options */ })

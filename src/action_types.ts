@@ -15,7 +15,7 @@ const RESOURCE_STATES = [
 ]
 
 const CHANGESET_TYPES = [
-  'set',
+  'merge',
   'remove',
   'reset',
 ]
@@ -24,12 +24,14 @@ const CHANGESET_TYPES = [
  *
  * Generates an object containing actions in the format: RESOURCE_NAME/DOMAIN/METHOD
  * - action types corresponding to standard REST-based actions
- * - action types for modifying resources
+ * - action types for modifying resource changesets
+ * - action types for modifying resource meta
  */
 export default function resourceActionsTypes<T>(resourceName: string): ResourceActionTypes<T> {
   if (!resourceName) throw new Error('Expected resource name')
 
   return {
+    ...generateActionTypes(resourceName, RESOURCE_TYPES, RESOURCE_STATES),
     ...generateActionTypes(resourceName, ['changeset'], CHANGESET_TYPES),
     ...generateActionTypes(resourceName, ['resource'], ['reset']),
     ...generateActionTypes(resourceName, ['meta'], ['reset']),

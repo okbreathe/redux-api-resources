@@ -50,7 +50,7 @@ export interface ResourceReducerOptions<T> {
 export type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
 
 export interface ResourceActions<T> {
-    changesetSet: ResourceActionCreator<T>
+  changesetMerge: ResourceActionCreator<T>
  changesetRemove: ResourceActionCreator<T>
   changesetReset: ResourceActionCreator<T>
       fetchStart: ResourceActionCreator<T>
@@ -76,7 +76,7 @@ export interface ResourceActions<T> {
 }
 
 export interface ResourceActionTypes<T> {
-    changesetSet: string
+  changesetMerge: string
  changesetRemove: string
   changesetReset: string
       fetchStart: string
@@ -114,7 +114,7 @@ export interface ResourceWithHelpers<T> extends Resource<T> {
 }
 
 export interface FormHelper {
-  set: (changes: { [key: string]: any }) => void
+  merge: (changes: { [key: string]: any }) => void
   remove: (...fields: string[]) => void
   reset: () => void
   errors: (action: string, fieldKey?: string) => any

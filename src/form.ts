@@ -12,8 +12,8 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
         /*
          * Add or replace given fields given fields
          */
-        set(changes: { [key: string]: any }){
-          dispatch(actions.changesetSet(changes, { form: key }))
+        merge(changes: { [key: string]: any }){
+          dispatch(actions.changesetMerge(changes, { form: key }))
         },
 
         /*
@@ -105,7 +105,7 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
           const val = form[field]
           const handler = function(value: any, eventType: string){
             const fieldData = { field, name, storeKey, value, eventType, previousValue: val }
-            const ret = dispatch(actions.changesetSet({ [field]: normalize(value, fieldData) }, { form: key }))
+            const ret = dispatch(actions.changesetMerge({ [field]: normalize(value, fieldData) }, { form: key }))
             afterEvent(value, fieldData)
             return ret
           }
