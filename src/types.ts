@@ -30,13 +30,15 @@ export interface Resource<T> {
   entities: {[key: string]: T}
   meta: {[key: string]: any}
   changeset: {[key: string]: any}
-  status: {
-    fetch: Status
-    create: Status
-    update: Status
-    destroy: Status
-    [propName: string]: Status
-  }
+  status: ResourceStatus
+}
+
+export interface ResourceStatus {
+  fetch: Status
+  create: Status
+  update: Status
+  destroy: Status
+  [propName: string]: Status
 }
 
 export interface ResourceReducerOptions<T> {
