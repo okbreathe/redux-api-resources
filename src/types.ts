@@ -71,7 +71,7 @@ export interface ResourceActions<T> {
     destroyReset: ResourceActionCreator<T>
        metaReset: ResourceActionCreator<T>
    resourceReset: ResourceActionCreator<T>
-    resourceForm: (key?: string) => (dispatch: Function, getState: () => any) => FormHelper
+    resourceForm: (key?: string) => FormHelper
    [key: string]: ActionCreator<any>
 }
 
