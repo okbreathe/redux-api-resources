@@ -9,7 +9,7 @@ const createSuccess   = "USERS/CREATE/SUCCESS"
 const updateSuccess   = "USERS/UPDATE/SUCCESS"
 const destroySuccess  = "USERS/DESTROY/SUCCESS"
 const resourceReset   = "USERS/RESOURCE/RESET"
-const changesetSet    = "USERS/CHANGESET/SET"
+const changesetMerge  = "USERS/CHANGESET/MERGE"
 const changesetRemove = "USERS/CHANGESET/REMOVE"
 const changesetReset  = "USERS/CHANGESET/RESET"
 const metaReset       = "USERS/META/RESET"
@@ -124,30 +124,34 @@ test("Reset a resource to the inital state", () => {
 })
 
 test('Creating a changeset', () => {
-  let state = reducer(initialResourceState<User>(), { payload: {}, type: changesetSet })
+  let state = reducer(initialResourceState<User>(), { payload: {}, type: changesetMerge })
   expect(state.changeset).toEqual({ default: {} })
 
-  state = reducer(initialResourceState<User>(), { payload: { foo: 'bar' }, type: changesetSet })
+  state = reducer(initialResourceState<User>(), { payload: { foo: 'bar' }, type: changesetMerge })
   expect(state.changeset).toEqual({ default: { foo: 'bar' } })
 
-  state = reducer(initialResourceState<User>(), { payload: { foo: 'bar' }, meta: { form: 'myForm' }, type: changesetSet })
+  state = reducer(initialResourceState<User>(), { payload: { foo: 'bar' }, meta: { form: 'myForm' }, type: changesetMerge })
   expect(state.changeset).toEqual({ myForm: { foo: 'bar' } })
 })
 
 test('Updating a changeset', () => {
-  let state = reducer(initialResourceState<User>(), { payload: {foo: 'bar'}, type: changesetSet })
-  state = reducer(state, { payload: { foo: 'quux' }, type: changesetSet })
+  let state = reducer(initialResourceState<User>(), { payload: {foo: 'bar'}, type: changesetMerge })
+  state = reducer(state, { payload: { foo: 'quux' }, type: changesetMerge })
   expect(state.changeset).toEqual({ default: { foo: 'quux' } })
+
+  state = reducer(initialResourceState<User>(), { payload: {foo: 'bar'}, type: changesetMerge })
+  state = reducer(state, { payload: { bar: 'quux' }, type: changesetMerge })
+  expect(state.changeset).toEqual({ default: { foo: 'bar', bar: 'quux' } })
 })
 
 test('Reseting a changeset', () => {
-  let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetSet })
+  let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetMerge })
   state = reducer(state, { payload: {}, type: changesetReset })
   expect(state.changeset).toEqual({ default: {} })
 })
 
 test('Removing a changeset field', () => {
-  let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetSet })
+  let state = reducer(initialResourceState<User>(), { payload: { foo: 'bar', baz: 'quux' }, type: changesetMerge })
   state = reducer(state, { payload: ['foo'], type: changesetRemove })
   expect(state.changeset).toEqual({ default: { baz: 'quux' } })
 })

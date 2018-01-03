@@ -59,7 +59,7 @@ function handleChangeset(domain: string, method: string, action: Action<any>, st
   const { form = 'default' } = meta
 
   switch (method) {
-    case 'SET':
+    case 'MERGE':
       newState.changeset[form] = changesetReducer(state.changeset[form], payload)
       break
     case 'REMOVE':
