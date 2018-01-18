@@ -34,19 +34,19 @@
   },
   "homepage": "https://github.com/okbreathe/redux-api-resources#readme",
   "dependencies": {
-    "@types/redux-mock-store": "^0.0.10",
-    "dts-webpack-plugin": "^0.0.9",
-    "redux": "^3.7.2",
-    "ts-loader": "^2.3.2",
-    "typescript": "^2.5.2"
+    "redux": "^3.7.2"
   },
   "devDependencies": {
     "@types/jest": "^20.0.7",
+    "@types/redux-mock-store": "^0.0.10",
     "dts-bundle": "^0.7.3",
+    "dts-webpack-plugin": "^0.0.9",
     "jest": "^20.0.4",
     "redux-mock-store": "^1.2.3",
     "redux-thunk": "^2.2.0",
     "ts-jest": "^20.0.10",
+    "ts-loader": "^2.3.2",
+    "typescript": "^2.5.2",
     "webpack": "^3.5.5"
   },
   "jest": {
