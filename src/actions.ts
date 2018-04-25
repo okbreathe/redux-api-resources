@@ -14,20 +14,19 @@ export default function resourceActions<T>(resourceName: string): ResourceAction
   if (!resourceName) throw new Error('Expected resource name')
   const actionTypes = resourceActionTypes(resourceName)
   const actions = Object.keys(actionTypes).reduce(
-    (acc: any, key) => ({ ...acc, [key]: createAction(actionTypes[key]) }),
+    (acc: any, key) => ({
+      ...acc,
+      [key]: (payload: T, meta?: any) => ({
+        type: actionTypes[key],
+        payload,
+        meta,
+        error: actionTypes[key].substr(-7) === 'FAILURE',
+      }),
+    }),
     {}
   )
 
   actions.resourceForm = form(resourceName, actions)
 
   return actions
-}
-
-function createAction<T>(type: string): (payload: T, meta?: any) => Action<T> {
-  return (payload: T, meta?: any) => ({
-    type,
-    payload,
-    meta,
-    error: type.substr(-7) === 'FAILURE',
-  })
 }
