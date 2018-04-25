@@ -1,23 +1,21 @@
 const path = require('path')
-const dtsPlugin = require('dts-webpack-plugin');
+const dtsPlugin = require('dts-webpack-plugin')
 
 module.exports = {
-  entry: "./src/index.ts",
+  entry: './src/index.ts',
   output: {
     path: path.resolve('./dist'),
-    filename: 'index.js'
+    filename: 'index.js',
   },
   plugins: [
     new dtsPlugin({
-      name: 'redux-api-resources'
-    })
+      name: 'redux-api-resources',
+    }),
   ],
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".json", ".jsx"],
+    extensions: ['.ts', '.tsx', '.js', '.json', '.jsx'],
   },
   module: {
-    loaders: [
-      { test: /\.tsx?$/, loader: "ts-loader" }
-    ]
-  }
+    loaders: [{ test: /\.tsx?$/, loader: 'ts-loader' }],
+  },
 }

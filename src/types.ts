@@ -6,7 +6,7 @@ export type Id = string | number
 
 export type Empty = boolean | null
 
-export interface Action<T>{
+export interface Action<T> {
   type: string
   payload: T
   error?: boolean
@@ -27,9 +27,9 @@ export interface Status {
 
 export interface Resource<T> {
   results: Id[]
-  entities: {[key: string]: T}
-  meta: {[key: string]: any}
-  changeset: {[key: string]: any}
+  entities: { [key: string]: T }
+  meta: { [key: string]: any }
+  changeset: { [key: string]: any }
   status: ResourceStatus
 }
 
@@ -53,53 +53,53 @@ export type ResourceActionCreator<T> = (payload?: any, meta?: any) => Action<T>
 
 export interface ResourceActions<T> {
   changesetMerge: ResourceActionCreator<T>
- changesetRemove: ResourceActionCreator<T>
+  changesetRemove: ResourceActionCreator<T>
   changesetReset: ResourceActionCreator<T>
-      fetchStart: ResourceActionCreator<T>
-    fetchSuccess: ResourceActionCreator<T>
-    fetchFailure: ResourceActionCreator<T>
-      fetchReset: ResourceActionCreator<T>
-     createStart: ResourceActionCreator<T>
-   createSuccess: ResourceActionCreator<T>
-   createFailure: ResourceActionCreator<T>
-     createReset: ResourceActionCreator<T>
-     updateStart: ResourceActionCreator<T>
-   updateSuccess: ResourceActionCreator<T>
-   updateFailure: ResourceActionCreator<T>
-     updateReset: ResourceActionCreator<T>
-    destroyStart: ResourceActionCreator<T>
+  fetchStart: ResourceActionCreator<T>
+  fetchSuccess: ResourceActionCreator<T>
+  fetchFailure: ResourceActionCreator<T>
+  fetchReset: ResourceActionCreator<T>
+  createStart: ResourceActionCreator<T>
+  createSuccess: ResourceActionCreator<T>
+  createFailure: ResourceActionCreator<T>
+  createReset: ResourceActionCreator<T>
+  updateStart: ResourceActionCreator<T>
+  updateSuccess: ResourceActionCreator<T>
+  updateFailure: ResourceActionCreator<T>
+  updateReset: ResourceActionCreator<T>
+  destroyStart: ResourceActionCreator<T>
   destroySuccess: ResourceActionCreator<T>
   destroyFailure: ResourceActionCreator<T>
-    destroyReset: ResourceActionCreator<T>
-       metaReset: ResourceActionCreator<T>
-   resourceReset: ResourceActionCreator<T>
-    resourceForm: (key?: string) => FormHelper
-   [key: string]: ActionCreator<any>
+  destroyReset: ResourceActionCreator<T>
+  metaReset: ResourceActionCreator<T>
+  resourceReset: ResourceActionCreator<T>
+  resourceForm: (key?: string) => FormHelper
+  [key: string]: ActionCreator<any>
 }
 
 export interface ResourceActionTypes<T> {
   changesetMerge: string
- changesetRemove: string
+  changesetRemove: string
   changesetReset: string
-      fetchStart: string
-    fetchSuccess: string
-    fetchFailure: string
-      fetchReset: string
-     createStart: string
-   createSuccess: string
-   createFailure: string
-     createReset: string
-     updateStart: string
-   updateSuccess: string
-   updateFailure: string
-     updateReset: string
-    destroyStart: string
+  fetchStart: string
+  fetchSuccess: string
+  fetchFailure: string
+  fetchReset: string
+  createStart: string
+  createSuccess: string
+  createFailure: string
+  createReset: string
+  updateStart: string
+  updateSuccess: string
+  updateFailure: string
+  updateReset: string
+  destroyStart: string
   destroySuccess: string
   destroyFailure: string
-    destroyReset: string
-       metaReset: string
-   resourceReset: string
-   [key: string]: string
+  destroyReset: string
+  metaReset: string
+  resourceReset: string
+  [key: string]: string
 }
 
 export interface ResourceWithHelpers<T> extends Resource<T> {
@@ -124,7 +124,10 @@ export interface FormHelper {
   field: FieldHelper
 }
 
-export type FieldHelper = (name: string, args?: FieldOptions) => { name: string, [propName: string]: any }
+export type FieldHelper = (
+  name: string,
+  args?: FieldOptions
+) => { name: string; [propName: string]: any }
 
 export interface FieldOptions {
   storeKey?: string
@@ -132,13 +135,13 @@ export interface FieldOptions {
   valueKey?: string
   eventType?: string | string[]
   defaultValue?: any
-  afterEvent?: (value: any, fieldData: any) => void
-  normalize?: (value: any, fieldData: any) => any
+  afterEvent?: (value: any, fieldData: FieldData) => void
+  normalize?: (value: any, fieldData: FieldData) => any
   format?: (value: any, name: string) => any
   eventHandler?: (...args: any[]) => any
 }
 
-export interface FieldData  {
+export interface FieldData {
   field: string
   name: string
   storeKey?: string | null

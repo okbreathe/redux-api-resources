@@ -13,14 +13,21 @@ import form from './form'
 export default function resourceActions<T>(resourceName: string): ResourceActions<T> {
   if (!resourceName) throw new Error('Expected resource name')
   const actionTypes = resourceActionTypes(resourceName)
-  const actions = Object.keys(actionTypes).reduce((acc: any, key) => {
-    acc[key] = createAction(actionTypes[key])
-    return acc
-  }, {})
+  const actions = Object.keys(actionTypes).reduce(
+    (acc: any, key) => ({ ...acc, [key]: createAction(actionTypes[key]) }),
+    {}
+  )
+
   actions.resourceForm = form(resourceName, actions)
+
   return actions
 }
 
 function createAction<T>(type: string): (payload: T, meta?: any) => Action<T> {
-  return (payload: T, meta?: any) => ({ type, payload, meta, error: type.substr(-7) === "FAILURE" })
+  return (payload: T, meta?: any) => ({
+    type,
+    payload,
+    meta,
+    error: type.substr(-7) === 'FAILURE',
+  })
 }

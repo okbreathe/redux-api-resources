@@ -1,24 +1,8 @@
 import { ResourceActionTypes } from './types'
 
-const RESOURCE_TYPES = [
-  'fetch',
-  'create',
-  'update',
-  'destroy'
-]
-
-const RESOURCE_STATES = [
-  'start',
-  'success',
-  'failure',
-  'reset'
-]
-
-const CHANGESET_TYPES = [
-  'merge',
-  'remove',
-  'reset',
-]
+const RESOURCE_TYPES = ['fetch', 'create', 'update', 'destroy']
+const RESOURCE_STATES = ['start', 'success', 'failure', 'reset']
+const CHANGESET_TYPES = ['merge', 'remove', 'reset']
 
 /**
  *
@@ -38,10 +22,12 @@ export default function resourceActionsTypes<T>(resourceName: string): ResourceA
   }
 }
 
-function generateActionTypes(resourceName: string, types: string[], states: string[]){
+function generateActionTypes(resourceName: string, types: string[], states: string[]) {
   return types.reduce((acc: any, type) => {
     states.forEach(state => {
-      acc[`${type}${state[0].toUpperCase()}${state.slice(1)}`] = `${resourceName}/${type}/${state}`.toUpperCase()
+      acc[
+        `${type}${state[0].toUpperCase()}${state.slice(1)}`
+      ] = `${resourceName}/${type}/${state}`.toUpperCase()
     })
     return acc
   }, {})

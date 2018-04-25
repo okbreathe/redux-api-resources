@@ -1,9 +1,8 @@
 import { ActionCreatorsMapObject, Dispatch } from 'redux'
-
 import { FieldData, FieldOptions, ResourceActions, Resource } from './types'
 
 const defaultFormKey = 'default'
-const crudActions = ['fetch','create','update','destroy']
+const crudActions = ['fetch', 'create', 'update', 'destroy']
 
 export default function<T>(resourceName: string, actions: ResourceActions<T>) {
   return function(key = defaultFormKey) {
@@ -12,14 +11,14 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
         /*
          * Add or replace given fields given fields
          */
-        merge(changes: { [key: string]: any }){
+        merge(changes: { [key: string]: any }) {
           dispatch(actions.changesetMerge(changes, { form: key }))
         },
 
         /*
          * Remove given fields
          */
-        remove(...fields: string[]){
+        remove(...fields: string[]) {
           dispatch(actions.changesetRemove(fields, { form: key }))
         },
 
@@ -33,7 +32,7 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
         /*
          * Return the current form errors
          */
-        errors(action: string, fieldKey: string = "") {
+        errors(action: string, fieldKey: string = '') {
           action = action.toLowerCase()
 
           if (crudActions.indexOf(action) == -1) {
@@ -42,11 +41,9 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
           }
 
           const status = getState()[resourceName].status
-          const errors = !status[action].success && status[action].payload || {}
+          const errors = (!status[action].success && status[action].payload) || {}
 
-          return fieldKey
-            ? errors[fieldKey]
-            : errors
+          return fieldKey ? errors[fieldKey] : errors
         },
 
         /*
@@ -58,7 +55,10 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
         changeset(...fields: string[]) {
           const state = getState()[resourceName].changeset[key] || {}
           return fields.length
-            ? fields.reduce((acc: any, f) => { acc[f] = state[f]; return acc }, {})
+            ? fields.reduce((acc: any, f) => {
+                acc[f] = state[f]
+                return acc
+              }, {})
             : state
         },
 
@@ -81,7 +81,7 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
             // The events we're listening to. Can be a string or an array of strings
             eventType = 'onChange',
             // The value used if no value currently exists in the changeset
-            defaultValue = "",
+            defaultValue = '',
             // Callback fired immediately after and event is triggered, but
             // before the store is updated
             afterEvent = (value: any, fieldData: FieldData) => undefined,
@@ -98,15 +98,27 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
             eventHandler = (...args: any[]) => {
               const event = args[0]
               return event && event.target ? event.target.value : event
-            }
-          } = (args || {})
+            },
+          } =
+            args || {}
           const field = storeKey || name
           const form = getState()[resourceName].changeset[key] || {}
           const val = form[field]
-          const handler = function(value: any, eventType: string){
-            const fieldData = { field, name, storeKey, value, eventType, previousValue: val }
-            const ret = dispatch(actions.changesetMerge({ [field]: normalize(value, fieldData) }, { form: key }))
+          const handler = function(value: any, eventType: string) {
+            const fieldData = {
+              field,
+              name,
+              storeKey,
+              value,
+              eventType,
+              previousValue: val,
+            }
+            const ret = dispatch(
+              actions.changesetMerge({ [field]: normalize(value, fieldData) }, { form: key })
+            )
+
             afterEvent(value, fieldData)
+
             return ret
           }
           const ret = {
@@ -115,10 +127,12 @@ export default function<T>(resourceName: string, actions: ResourceActions<T>) {
           }
           const eventTypes = Array.isArray(eventType) ? eventType : [eventType]
 
-          eventTypes.forEach((str: string) => ret[str] = (...args: any[]) => handler(eventHandler(...args), str))
+          eventTypes.forEach(
+            (str: string) => (ret[str] = (...args: any[]) => handler(eventHandler(...args), str))
+          )
 
           return ret
-        }
+        },
       }
     }
   }
