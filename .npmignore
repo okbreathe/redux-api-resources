@@ -4,3 +4,5 @@ __test__
 project.md
 project.txt
 tsconfig.json
+webpack.config.js
+.prettierrc
