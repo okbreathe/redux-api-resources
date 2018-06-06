@@ -277,3 +277,9 @@ a server response into a more desired shape.
 * `changesetReducer` - applied when merging changesets
 * `entityReducer` - applied when merging entities into the store
 * `errorReducer` - applied when adding errors to an action's status
+
+
+### Troubleshooting
+
+1. My Component is not updating!
+Make sure you've connected the component to the resource it's modifying, otherwise it won't catch the state changes
