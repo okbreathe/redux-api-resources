@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "target": "es6",
+    "target": "es5",
+    "lib": ["es6"],
     "module": "commonjs",
     "strict": true,
     "declaration": true,
